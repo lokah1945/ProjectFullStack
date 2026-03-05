@@ -1,0 +1,60 @@
+{
+  "kind": "collectionType",
+  "collectionName": "sites",
+  "info": {
+    "singularName": "site",
+    "pluralName": "sites",
+    "displayName": "Site",
+    "description": "Multi-site configuration"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "slug": {
+      "type": "uid",
+      "unique": true,
+      "targetField": "name"
+    },
+    "domains": {
+      "type": "json"
+    },
+    "defaultLocale": {
+      "type": "string",
+      "default": "en"
+    },
+    "enabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "theme": {
+      "type": "json"
+    },
+    "navConfig": {
+      "type": "json"
+    },
+    "seoDefaults": {
+      "type": "json"
+    },
+    "description": {
+      "type": "text"
+    },
+    "articles": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::article.article",
+      "mappedBy": "site"
+    },
+    "categories": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::category.category",
+      "mappedBy": "site"
+    }
+  }
+}

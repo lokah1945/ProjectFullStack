@@ -1,0 +1,65 @@
+{
+  "kind": "collectionType",
+  "collectionName": "ad_slots",
+  "info": {
+    "singularName": "ad-slot",
+    "pluralName": "ad-slots",
+    "displayName": "Ad Slot",
+    "description": "Global advertisement slots"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "slotKey": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "placement": {
+      "type": "enumeration",
+      "enum": [
+        "header",
+        "footer",
+        "sidebar",
+        "in_article",
+        "between_list",
+        "sticky_bottom",
+        "search_top",
+        "search_bottom",
+        "listing_between"
+      ]
+    },
+    "sizePreset": {
+      "type": "string"
+    },
+    "enabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "deviceTarget": {
+      "type": "enumeration",
+      "enum": ["all", "mobile", "tablet", "desktop"],
+      "default": "all"
+    },
+    "responsiveSizes": {
+      "type": "json"
+    },
+    "lazyDelayMs": {
+      "type": "integer",
+      "default": 2000
+    },
+    "scheduleStart": {
+      "type": "datetime"
+    },
+    "scheduleEnd": {
+      "type": "datetime"
+    },
+    "adUnit": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::ad-unit.ad-unit"
+    }
+  }
+}

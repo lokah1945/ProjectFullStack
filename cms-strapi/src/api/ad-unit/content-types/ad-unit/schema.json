@@ -1,0 +1,32 @@
+{
+  "kind": "collectionType",
+  "collectionName": "ad_units",
+  "info": {
+    "singularName": "ad-unit",
+    "pluralName": "ad-units",
+    "displayName": "Ad Unit",
+    "description": "Global advertisement units"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": ["banner", "native_object"],
+      "required": true
+    },
+    "codes": {
+      "type": "json"
+    },
+    "isActive": {
+      "type": "boolean",
+      "default": true
+    }
+  }
+}

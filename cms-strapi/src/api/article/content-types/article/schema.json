@@ -1,0 +1,114 @@
+{
+  "kind": "collectionType",
+  "collectionName": "articles",
+  "info": {
+    "singularName": "article",
+    "pluralName": "articles",
+    "displayName": "Article",
+    "description": "News and blog articles"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "slug": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "excerpt": {
+      "type": "text",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "coverImage": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"],
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "content": {
+      "type": "blocks",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "isFeatured": {
+      "type": "boolean",
+      "default": false,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "isTrending": {
+      "type": "boolean",
+      "default": false,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "seo": {
+      "type": "json",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "site": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::site.site",
+      "inversedBy": "articles"
+    },
+    "category": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::category.category",
+      "inversedBy": "articles"
+    },
+    "tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tag.tag",
+      "inversedBy": "articles"
+    },
+    "author": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::author.author",
+      "inversedBy": "articles"
+    }
+  }
+}
