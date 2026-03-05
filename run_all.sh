@@ -44,6 +44,12 @@ pm2 delete all 2>/dev/null || true
 log_ok "pm2 processes cleared."
 
 # ─────────────────────────────────────────────────────────────────────────────
+# Ensure required directories exist
+# ─────────────────────────────────────────────────────────────────────────────
+mkdir -p "$ROOT_DIR/cms-strapi/public/uploads"
+mkdir -p "$ROOT_DIR/web-nextjs/public"
+
+# ─────────────────────────────────────────────────────────────────────────────
 # Build Strapi
 # ─────────────────────────────────────────────────────────────────────────────
 log_info "Building Strapi admin panel..."

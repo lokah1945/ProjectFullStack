@@ -143,7 +143,15 @@ if ! grep -qE "^PORT=" "$ENV_FILE"; then
 fi
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 7. Build Strapi admin panel
+# 7. Ensure required directories exist
+# ─────────────────────────────────────────────────────────────────────────────
+log_info "Creating required directories..."
+mkdir -p "$ROOT_DIR/cms-strapi/public/uploads"
+mkdir -p "$ROOT_DIR/web-nextjs/public"
+log_ok "Required directories created."
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 8. Build Strapi admin panel
 # ─────────────────────────────────────────────────────────────────────────────
 log_info "Building Strapi admin panel..."
 cd "$ROOT_DIR/cms-strapi"

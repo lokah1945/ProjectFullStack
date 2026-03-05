@@ -47,6 +47,12 @@ EOF
 fi
 
 # ─────────────────────────────────────────────────────────────────────────────
+# Ensure required directories exist
+# ─────────────────────────────────────────────────────────────────────────────
+mkdir -p "$ROOT_DIR/cms-strapi/public/uploads"
+mkdir -p "$ROOT_DIR/web-nextjs/public"
+
+# ─────────────────────────────────────────────────────────────────────────────
 # Start Strapi in develop mode (background)
 # ─────────────────────────────────────────────────────────────────────────────
 log_info "Starting Strapi in develop mode..."
