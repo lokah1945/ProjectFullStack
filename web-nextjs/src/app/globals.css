@@ -1,0 +1,276 @@
+/* web-nextjs/src/app/globals.css */
+@import "tailwindcss";
+
+/* ─────────────────────────────────────────────
+   CSS Custom Properties
+   ─────────────────────────────────────────────*/
+
+:root {
+  /* Site-specific primary color — overridden per site via layout */
+  --color-primary: #0F4C81;
+  --color-primary-dark: color-mix(in srgb, var(--color-primary) 80%, black);
+  --color-primary-light: color-mix(in srgb, var(--color-primary) 15%, white);
+
+  /* Typography */
+  --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-inter: 'Inter', system-ui, sans-serif;
+  --font-jakarta: 'Plus Jakarta Sans', system-ui, sans-serif;
+
+  /* Neutral palette */
+  --color-bg: #ffffff;
+  --color-surface: #f8f9fa;
+  --color-border: #e5e7eb;
+  --color-text: #111827;
+  --color-text-muted: #6b7280;
+  --color-text-faint: #9ca3af;
+
+  /* Spacing scale (4px base) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* Radius */
+  --radius-sm: 4px;
+  --radius: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+}
+
+/* ─────────────────────────────────────────────
+   Base Reset
+   ─────────────────────────────────────────────*/
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+}
+
+/* ─────────────────────────────────────────────
+   Accessibility
+   ─────────────────────────────────────────────*/
+
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ─────────────────────────────────────────────
+   Prose styling for article content
+   ─────────────────────────────────────────────*/
+
+.prose {
+  max-width: 75ch;
+  line-height: 1.75;
+  color: var(--color-text);
+}
+
+.prose p { margin-bottom: 1.25em; }
+
+.prose h2 {
+  margin-top: 2em;
+  margin-bottom: 0.75em;
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: var(--font-display);
+  color: var(--color-text);
+}
+
+.prose h3 {
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  font-size: 1.25rem;
+  font-weight: 600;
+  font-family: var(--font-display);
+  color: var(--color-text);
+}
+
+.prose h4 {
+  margin-top: 1.25em;
+  margin-bottom: 0.5em;
+  font-size: 1.1rem;
+  font-weight: 600;
+  font-family: var(--font-display);
+}
+
+.prose ul,
+.prose ol {
+  margin-bottom: 1.25em;
+  padding-left: 1.5em;
+}
+
+.prose li { margin-bottom: 0.5em; }
+
+.prose blockquote {
+  border-left: 3px solid var(--color-primary);
+  padding-left: 1em;
+  margin: 1.5em 0;
+  font-style: italic;
+  color: #6b7280;
+}
+
+.prose a {
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.prose a:hover {
+  color: var(--color-primary-dark);
+}
+
+.prose img {
+  border-radius: 0.5rem;
+  margin: 1.5em 0;
+  max-width: 100%;
+  height: auto;
+}
+
+.prose pre {
+  background: #1e293b;
+  color: #e2e8f0;
+  padding: 1em;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin: 1.5em 0;
+}
+
+.prose code {
+  background: #f1f5f9;
+  padding: 0.125em 0.25em;
+  border-radius: 0.25rem;
+  font-size: 0.875em;
+}
+
+.prose pre code {
+  background: none;
+  padding: 0;
+}
+
+/* ─────────────────────────────────────────────
+   Layout Utility
+   ─────────────────────────────────────────────*/
+
+.container-content {
+  width: 100%;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--space-4);
+  padding-right: var(--space-4);
+}
+
+@media (min-width: 640px) {
+  .container-content {
+    padding-left: var(--space-6);
+    padding-right: var(--space-6);
+  }
+}
+
+@media (min-width: 1024px) {
+  .container-content {
+    padding-left: var(--space-8);
+    padding-right: var(--space-8);
+  }
+}
+
+/* ─────────────────────────────────────────────
+   Ad Slot Placeholders (CLS Prevention)
+   ─────────────────────────────────────────────*/
+
+.ad-slot-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  overflow: hidden;
+}
+
+.ad-slot-placeholder {
+  background: var(--color-surface);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ─────────────────────────────────────────────
+   Transitions
+   ─────────────────────────────────────────────*/
+
+.transition-hover {
+  transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ─────────────────────────────────────────────
+   Skeleton Loading
+   ─────────────────────────────────────────────*/
+
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.skeleton {
+  background: var(--color-surface);
+  border-radius: var(--radius-sm);
+  animation: skeleton-pulse 2s ease-in-out infinite;
+}
+
+/* ─────────────────────────────────────────────
+   Category Badge
+   ─────────────────────────────────────────────*/
+
+.category-badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  background: var(--color-primary-light);
+  padding: 3px 10px;
+  border-radius: 100px;
+  line-height: 1.5;
+}
+
+/* ─────────────────────────────────────────────
+   Article Card Hover
+   ─────────────────────────────────────────────*/
+
+.article-card {
+  transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.article-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.08);
+}
