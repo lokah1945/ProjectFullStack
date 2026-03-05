@@ -1,0 +1,30 @@
+{
+  "name": "cms-strapi",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Strapi v5 CMS for the multi-site blog/news platform",
+  "scripts": {
+    "develop": "strapi develop",
+    "start": "strapi start",
+    "build": "strapi build",
+    "strapi": "strapi"
+  },
+  "dependencies": {
+    "@strapi/strapi": "5.38.0",
+    "@strapi/plugin-users-permissions": "5.38.0",
+    "pg": "^8.13.0",
+    "better-sqlite3": "^11.7.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-router-dom": "^6.0.0",
+    "styled-components": "^6.0.0"
+  },
+  "devDependencies": {
+    "@strapi/typescript-utils": "5.38.0"
+  },
+  "engines": {
+    "node": ">=20.0.0 <=24.x.x",
+    "npm": ">=6.0.0"
+  },
+  "packageManager": "pnpm@9.15.0"
+}
