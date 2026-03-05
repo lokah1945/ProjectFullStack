@@ -96,6 +96,7 @@ REQUIRED_VARS=(
   API_TOKEN_SALT
   ADMIN_JWT_SECRET
   JWT_SECRET
+  TRANSFER_TOKEN_SALT
 )
 
 if [ ! -f "$ENV_FILE" ]; then
@@ -110,6 +111,7 @@ Please create it with the following variables:
   API_TOKEN_SALT=
   ADMIN_JWT_SECRET=
   JWT_SECRET=
+  TRANSFER_TOKEN_SALT=
   HOST=0.0.0.0
   PORT=3200
 

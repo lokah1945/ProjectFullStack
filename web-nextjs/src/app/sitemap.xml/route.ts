@@ -55,7 +55,8 @@ export async function GET() {
     changefreq: 'weekly',
   }));
 
-  const allUrls = [...staticUrls, ...categoryUrls, ...articleUrls];
+  const allUrls: Array<{ url: string; lastmod?: string; priority: string; changefreq: string }> =
+    [...staticUrls, ...categoryUrls, ...articleUrls];
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset
