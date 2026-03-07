@@ -1,0 +1,33 @@
+{
+  "kind": "collectionType",
+  "collectionName": "article_views",
+  "info": {
+    "singularName": "article-view",
+    "pluralName": "article-views",
+    "displayName": "ArticleView",
+    "description": "Tracks individual article page views for trending/featured calculation"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "article": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::article.article"
+    },
+    "viewedAt": {
+      "type": "datetime",
+      "required": true
+    },
+    "ip": {
+      "type": "string",
+      "private": true
+    },
+    "userAgent": {
+      "type": "string",
+      "private": true
+    }
+  }
+}

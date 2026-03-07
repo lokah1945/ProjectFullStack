@@ -60,24 +60,6 @@
         }
       }
     },
-    "isFeatured": {
-      "type": "boolean",
-      "default": false,
-      "pluginOptions": {
-        "i18n": {
-          "localized": false
-        }
-      }
-    },
-    "isTrending": {
-      "type": "boolean",
-      "default": false,
-      "pluginOptions": {
-        "i18n": {
-          "localized": false
-        }
-      }
-    },
     "seo": {
       "type": "json",
       "pluginOptions": {

@@ -11,5 +11,35 @@ export default {
         middlewares: [],
       },
     },
+    {
+      method: 'POST',
+      path: '/articles/:documentId/view',
+      handler: 'custom-article.recordView',
+      config: {
+        auth: false,
+        policies: [],
+        middlewares: [],
+      },
+    },
+    {
+      method: 'GET',
+      path: '/articles/trending',
+      handler: 'custom-article.trending',
+      config: {
+        auth: false,
+        policies: [],
+        middlewares: [],
+      },
+    },
+    {
+      method: 'GET',
+      path: '/articles/featured',
+      handler: 'custom-article.featured',
+      config: {
+        auth: false,
+        policies: [],
+        middlewares: [],
+      },
+    },
   ],
 };

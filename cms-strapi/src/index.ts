@@ -47,12 +47,6 @@ export default {
     }
 
     // ─────────────────────────────────────────────
-    // AD CODE HELPERS
-    // ─────────────────────────────────────────────
-    const adCode = (label: string, slot: string, type = 'banner') =>
-      `<div class="ad-placeholder" style="background:#f0f0f0;display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-family:sans-serif;color:#999;min-height:90px;"><span>Ad Unit — ${label} Slot #${slot}</span></div><script>console.log("${type} ad loaded: ${label} ${slot}");</script>`;
-
-    // ─────────────────────────────────────────────
     // STEP 3A: SITES
     // R2.4: draftAndPublish:false → NEVER pass status
     // ─────────────────────────────────────────────
@@ -66,10 +60,10 @@ export default {
         defaultLocale: 'en',
         enabled: true,
         theme: {
-          logoUrl: '/logos/glimpseit-logo.svg',
-          faviconUrl: '/favicons/glimpseit-favicon.ico',
           primaryColor: '#0F4C81',
         },
+        // NOTE: logo, favicon, ogImage are now Strapi media fields.
+        // Upload them via Strapi admin after seed — media cannot be seeded without files.
         navConfig: {
           showLatest: true,
           showFeatured: true,
@@ -79,9 +73,10 @@ export default {
         seoDefaults: {
           title: 'GlimpseIt — Smart Navigation in the Financial World',
           description: 'GlimpseIt.online is a leading financial information portal covering stock market analysis, investment recommendations, economic news, and financial literacy — designed to help investors make rational, safe, and profitable decisions.',
-          ogImageUrl: '/og/glimpseit-og.jpg',
         },
         description: 'GlimpseIt.online hadir sebagai portal informasi terdepan bagi Anda yang ingin menguasai dinamika pasar modal dan literasi keuangan. Mulai dari berita ekonomi terkini, analisis pasar saham, hingga rekomendasi investasi yang tajam dan berbasis data. Sesuai dengan nama kami, kami menyajikan "glimpse" (sekilas pandang) dan wawasan mendalam yang dirancang untuk membantu investor pemula maupun profesional membuat keputusan finansial yang rasional, aman, dan menguntungkan.',
+        headCode: '<!-- Google Analytics (example) -->\n<script async src="https://www.googletagmanager.com/gtag/js?id=GA-GLIMPSEIT-01"></script>\n<script>\n  window.dataLayer = window.dataLayer || [];\n  function gtag(){dataLayer.push(arguments);}\n  gtag("js", new Date());\n  gtag("config", "GA-GLIMPSEIT-01");\n</script>\n<meta name="google-site-verification" content="glimpseit-verification-token-abc123" />',
+        bodyCode: '<!-- Google Tag Manager (noscript) -->\n<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-GLIMPSEIT" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>\n<!-- End Google Tag Manager (noscript) -->',
       },
     });
 
@@ -93,8 +88,6 @@ export default {
         defaultLocale: 'en',
         enabled: true,
         theme: {
-          logoUrl: '/logos/cryptonice-logo.svg',
-          faviconUrl: '/favicons/cryptonice-favicon.ico',
           primaryColor: '#6C3CE1',
         },
         navConfig: {
@@ -106,9 +99,10 @@ export default {
         seoDefaults: {
           title: 'Cryptonice — Your Trusted Crypto Intelligence Hub',
           description: 'Cryptonice.online is a comprehensive crypto education and information gateway covering cryptocurrency markets, blockchain technology, DeFi, NFTs, Web3, and digital wallet security — making crypto accessible for everyone.',
-          ogImageUrl: '/og/cryptonice-og.jpg',
         },
         description: 'Cryptonice.online adalah gerbang edukasi dan informasi terlengkap yang mengupas tuntas ekosistem cryptocurrency dan teknologi blockchain. Kami menerjemahkan kompleksitas dunia kripto menjadi informasi yang mudah dipahami oleh siapa saja. Dari update harga koin terbaru, ulasan proyek smart contract, tren DeFi dan NFT, hingga panduan keamanan dompet digital. Tujuan kami adalah mendampingi perjalanan investasi digital Anda agar lebih cerdas, aman, dan memuaskan.',
+        headCode: '<!-- Google Analytics (example) -->\n<script async src="https://www.googletagmanager.com/gtag/js?id=GA-CRYPTONICE-01"></script>\n<script>\n  window.dataLayer = window.dataLayer || [];\n  function gtag(){dataLayer.push(arguments);}\n  gtag("js", new Date());\n  gtag("config", "GA-CRYPTONICE-01");\n</script>\n<meta name="google-site-verification" content="cryptonice-verification-token-def456" />',
+        bodyCode: '<!-- Google Tag Manager (noscript) -->\n<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-CRYPTONICE" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>\n<!-- End Google Tag Manager (noscript) -->',
       },
     });
 
@@ -120,8 +114,6 @@ export default {
         defaultLocale: 'en',
         enabled: true,
         theme: {
-          logoUrl: '/logos/healthandbeauty-logo.svg',
-          faviconUrl: '/favicons/healthandbeauty-favicon.ico',
           primaryColor: '#D4436C',
         },
         navConfig: {
@@ -133,9 +125,10 @@ export default {
         seoDefaults: {
           title: 'Health & Beauty — Harmony of Inner Wellness and Outer Beauty',
           description: 'Healthandbeauty.my.id is your daily wellness destination dedicated to holistic well-being — covering fitness tips, nutrition, skincare routines, beauty trends, and mental health for a confident and empowered you.',
-          ogImageUrl: '/og/healthandbeauty-og.jpg',
         },
         description: 'Healthandbeauty.my.id adalah destinasi gaya hidup harian yang didedikasikan untuk kesejahteraan dan penampilan paripurna Anda. Kami percaya bahwa kecantikan sejati bermula dari tubuh yang sehat. Oleh karena itu, kami menyuguhkan paduan artikel informatif seputar tips kebugaran fisik, nutrisi, rutinitas skincare (perawatan kulit), hingga tren kecantikan terkini. Temukan panduan praktis dan terpercaya di sini untuk tampil percaya diri dan merasa maksimal setiap hari.',
+        headCode: '<!-- Google Analytics (example) -->\n<script async src="https://www.googletagmanager.com/gtag/js?id=GA-HEALTHBEAUTY-01"></script>\n<script>\n  window.dataLayer = window.dataLayer || [];\n  function gtag(){dataLayer.push(arguments);}\n  gtag("js", new Date());\n  gtag("config", "GA-HEALTHBEAUTY-01");\n</script>\n<meta name="google-site-verification" content="healthbeauty-verification-token-ghi789" />',
+        bodyCode: '<!-- Google Tag Manager (noscript) -->\n<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-HEALTHBEAUTY" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>\n<!-- End Google Tag Manager (noscript) -->',
       },
     });
 
@@ -340,8 +333,6 @@ export default {
       title: 'How to Build a Diversified Investment Portfolio in 2026',
       slug: 'how-to-build-a-diversified-investment-portfolio-in-2026',
       excerpt: 'Building a diversified investment portfolio is the cornerstone of long-term wealth creation. Learn the strategies professionals use to balance risk and reward across multiple asset classes.',
-      isFeatured: true,
-      isTrending: false,
       site: glimpseitSite.documentId,
       category: glimpseitCategories['investing'].documentId,
       author: authorSarah.documentId,
@@ -378,8 +369,6 @@ export default {
       title: 'Understanding Bull and Bear Markets: A Complete Guide',
       slug: 'understanding-bull-and-bear-markets-a-complete-guide',
       excerpt: 'Bull and bear markets define the rhythm of investing. Understanding what drives each phase — and how to position your portfolio accordingly — is essential for every investor.',
-      isFeatured: true,
-      isTrending: false,
       site: glimpseitSite.documentId,
       category: glimpseitCategories['stock-market'].documentId,
       author: authorSarah.documentId,
@@ -410,8 +399,6 @@ export default {
       title: 'Top 10 Stock Market Indicators Every Investor Should Know',
       slug: 'top-10-stock-market-indicators-every-investor-should-know',
       excerpt: 'From the VIX to the yield curve, stock market indicators provide crucial signals about market health and future direction. Master these 10 essential indicators.',
-      isFeatured: true,
-      isTrending: false,
       site: glimpseitSite.documentId,
       category: glimpseitCategories['stock-market'].documentId,
       author: authorDavid.documentId,
@@ -447,8 +434,6 @@ export default {
       title: 'The Impact of Federal Reserve Policy on Global Markets',
       slug: 'the-impact-of-federal-reserve-policy-on-global-markets',
       excerpt: 'When the Fed speaks, global markets listen. Explore how Federal Reserve monetary policy decisions ripple through equities, bonds, currencies, and emerging markets worldwide.',
-      isFeatured: true,
-      isTrending: false,
       site: glimpseitSite.documentId,
       category: glimpseitCategories['economy'].documentId,
       author: authorSarah.documentId,
@@ -474,8 +459,6 @@ export default {
       title: 'Gold vs Stocks: Where Should You Invest During Inflation?',
       slug: 'gold-vs-stocks-where-should-you-invest-during-inflation',
       excerpt: 'As inflation fears rise, investors debate the merits of gold versus equities. We examine the historical evidence and what data says about allocating during inflationary periods.',
-      isFeatured: true,
-      isTrending: false,
       site: glimpseitSite.documentId,
       category: glimpseitCategories['commodities'].documentId,
       author: authorSarah.documentId,
@@ -499,8 +482,6 @@ export default {
       title: 'Forex Trading Strategies: A Comprehensive Beginner\'s Guide',
       slug: 'forex-trading-strategies-a-comprehensive-beginners-guide',
       excerpt: 'The foreign exchange market is the world\'s largest financial market, trading over $7 trillion daily. This comprehensive guide helps beginners understand forex trading strategies from the ground up.',
-      isFeatured: true,
-      isTrending: false,
       site: glimpseitSite.documentId,
       category: glimpseitCategories['forex'].documentId,
       author: authorDavid.documentId,
@@ -527,8 +508,6 @@ export default {
       title: 'Personal Finance 101: Budgeting Strategies That Actually Work',
       slug: 'personal-finance-101-budgeting-strategies-that-actually-work',
       excerpt: 'Managing personal finances starts with a solid budget. Discover proven budgeting strategies from the 50/30/20 rule to zero-based budgeting that will transform your financial health.',
-      isFeatured: false,
-      isTrending: true,
       site: glimpseitSite.documentId,
       category: glimpseitCategories['personal-finance'].documentId,
       author: authorSarah.documentId,
@@ -549,8 +528,6 @@ export default {
       title: 'Best Dividend Stocks for Long-Term Income in 2026',
       slug: 'best-dividend-stocks-for-long-term-income-in-2026',
       excerpt: 'Dividend investing offers a powerful combination of regular income and capital appreciation. Discover the criteria for selecting dividend stocks that can fund your retirement.',
-      isFeatured: false,
-      isTrending: true,
       site: glimpseitSite.documentId,
       category: glimpseitCategories['investing'].documentId,
       author: authorSarah.documentId,
@@ -570,8 +547,6 @@ export default {
       title: 'Understanding Commodity Markets: Oil, Gold, and Agriculture',
       slug: 'understanding-commodity-markets-oil-gold-and-agriculture',
       excerpt: 'Commodity markets are the backbone of the global economy. Understanding the forces that drive oil, gold, and agricultural prices is essential for any well-rounded investor.',
-      isFeatured: false,
-      isTrending: true,
       site: glimpseitSite.documentId,
       category: glimpseitCategories['commodities'].documentId,
       author: authorDavid.documentId,
@@ -592,8 +567,6 @@ export default {
       title: 'The Rise of ESG Investing: What You Need to Know',
       slug: 'the-rise-of-esg-investing-what-you-need-to-know',
       excerpt: 'Environmental, Social, and Governance investing has grown from a niche strategy to a mainstream movement. Understand what ESG means, how it works, and whether it belongs in your portfolio.',
-      isFeatured: false,
-      isTrending: true,
       site: glimpseitSite.documentId,
       category: glimpseitCategories['investing'].documentId,
       author: authorSarah.documentId,
@@ -613,8 +586,6 @@ export default {
       title: 'Retirement Planning in Your 30s: Start Now or Pay Later',
       slug: 'retirement-planning-in-your-30s-start-now-or-pay-later',
       excerpt: 'Your 30s are the most critical decade for retirement planning. The compound interest advantage available in your 30s can never be fully recovered if you wait until your 40s or 50s.',
-      isFeatured: false,
-      isTrending: true,
       site: glimpseitSite.documentId,
       category: glimpseitCategories['retirement'].documentId,
       author: authorSarah.documentId,
@@ -635,8 +606,6 @@ export default {
       title: 'How Interest Rates Affect Your Investment Portfolio',
       slug: 'how-interest-rates-affect-your-investment-portfolio',
       excerpt: 'Interest rates are the single most important macro variable affecting asset prices. Understanding the mechanisms through which rates impact every part of your portfolio is essential knowledge.',
-      isFeatured: false,
-      isTrending: true,
       site: glimpseitSite.documentId,
       category: glimpseitCategories['economy'].documentId,
       author: authorDavid.documentId,
@@ -746,8 +715,6 @@ export default {
         title: art.title,
         slug: art.slug,
         excerpt: art.excerpt,
-        isFeatured: false,
-        isTrending: false,
         site: glimpseitSite.documentId,
         category: glimpseitCategories[art.category].documentId,
         author: [authorSarah, authorDavid][Math.floor(art.title.length % 2)].documentId,
@@ -778,8 +745,6 @@ export default {
       title: 'Bitcoin Halving 2024: What History Tells Us About Price Action',
       slug: 'bitcoin-halving-2024-what-history-tells-us-about-price-action',
       excerpt: 'Bitcoin\'s fourth halving has historical precedent pointing to explosive price action in the 12–18 months that follow. We analyze every halving cycle and what it means for 2025–2026.',
-      isFeatured: true,
-      isTrending: false,
       site: cryptoniceSite.documentId,
       category: cryptoniceCategories['bitcoin'].documentId,
       author: authorDavid.documentId,
@@ -811,8 +776,6 @@ export default {
       title: 'The Complete Guide to DeFi Yield Farming for Beginners',
       slug: 'the-complete-guide-to-defi-yield-farming-for-beginners',
       excerpt: 'Yield farming has transformed DeFi into a multi-billion dollar ecosystem. This comprehensive beginner\'s guide explains how yield farming works, the risks involved, and how to start safely.',
-      isFeatured: true,
-      isTrending: false,
       site: cryptoniceSite.documentId,
       category: cryptoniceCategories['defi'].documentId,
       author: authorDavid.documentId,
@@ -845,8 +808,6 @@ export default {
       title: 'Ethereum vs Solana: A Deep Technical Comparison',
       slug: 'ethereum-vs-solana-a-deep-technical-comparison',
       excerpt: 'Ethereum and Solana are the two dominant smart contract platforms. Their architectural differences create fundamentally different trade-offs in security, decentralization, and performance.',
-      isFeatured: true,
-      isTrending: false,
       site: cryptoniceSite.documentId,
       category: cryptoniceCategories['altcoins'].documentId,
       author: authorDavid.documentId,
@@ -871,8 +832,6 @@ export default {
       title: 'How to Secure Your Crypto Wallet Against Common Threats',
       slug: 'how-to-secure-your-crypto-wallet-against-common-threats',
       excerpt: 'Crypto security is not optional — one mistake can wipe out your entire portfolio. This comprehensive guide covers hardware wallets, seed phrase management, phishing prevention, and advanced OpSec.',
-      isFeatured: true,
-      isTrending: false,
       site: cryptoniceSite.documentId,
       category: cryptoniceCategories['security'].documentId,
       author: authorDavid.documentId,
@@ -896,8 +855,6 @@ export default {
       title: 'Understanding Smart Contracts: From Theory to Practice',
       slug: 'understanding-smart-contracts-from-theory-to-practice',
       excerpt: 'Smart contracts are self-executing programs on the blockchain that automate agreements without intermediaries. Understand how they work, their limitations, and real-world applications.',
-      isFeatured: true,
-      isTrending: false,
       site: cryptoniceSite.documentId,
       category: cryptoniceCategories['blockchain-tech'].documentId,
       author: authorDavid.documentId,
@@ -921,8 +878,6 @@ export default {
       title: 'NFT Market Evolution: Beyond Digital Art',
       slug: 'nft-market-evolution-beyond-digital-art',
       excerpt: 'NFTs exploded as digital art collectibles but their utility extends far beyond JPEGs. Explore how NFTs are evolving into infrastructure for gaming, ticketing, identity, and real-world asset tokenization.',
-      isFeatured: true,
-      isTrending: false,
       site: cryptoniceSite.documentId,
       category: cryptoniceCategories['nft-metaverse'].documentId,
       author: authorDavid.documentId,
@@ -946,8 +901,6 @@ export default {
       title: 'Web3 Social Media: Can Decentralization Fix the Internet?',
       slug: 'web3-social-media-can-decentralization-fix-the-internet',
       excerpt: 'Centralized social media platforms control your data, censor content, and monetize your attention. Web3 social platforms promise user ownership, censorship resistance, and creator monetization.',
-      isFeatured: false,
-      isTrending: true,
       site: cryptoniceSite.documentId,
       category: cryptoniceCategories['web3'].documentId,
       author: authorDavid.documentId,
@@ -968,8 +921,6 @@ export default {
       title: 'Crypto Trading Psychology: Mastering Fear and Greed',
       slug: 'crypto-trading-psychology-mastering-fear-and-greed',
       excerpt: 'Crypto markets are extreme amplifiers of human emotion. Fear and greed destroy more crypto portfolios than bad projects do. Learn the psychological disciplines that separate profitable traders from the rest.',
-      isFeatured: false,
-      isTrending: true,
       site: cryptoniceSite.documentId,
       category: cryptoniceCategories['trading-analysis'].documentId,
       author: authorDavid.documentId,
@@ -990,8 +941,6 @@ export default {
       title: 'Layer 2 Solutions Explained: Scaling Ethereum for Mass Adoption',
       slug: 'layer-2-solutions-explained-scaling-ethereum-for-mass-adoption',
       excerpt: 'Ethereum\'s base layer cannot handle the transaction volume required for global adoption. Layer 2 scaling solutions are the answer — here\'s how they work and which are leading the race.',
-      isFeatured: false,
-      isTrending: true,
       site: cryptoniceSite.documentId,
       category: cryptoniceCategories['blockchain-tech'].documentId,
       author: authorDavid.documentId,
@@ -1012,8 +961,6 @@ export default {
       title: 'Bitcoin ETFs: The Institutional Revolution in Crypto',
       slug: 'bitcoin-etfs-the-institutional-revolution-in-crypto',
       excerpt: 'The approval of Bitcoin spot ETFs in the U.S. in January 2024 was a watershed moment. Understand what ETFs mean for Bitcoin\'s market structure, price dynamics, and long-term trajectory.',
-      isFeatured: false,
-      isTrending: true,
       site: cryptoniceSite.documentId,
       category: cryptoniceCategories['bitcoin'].documentId,
       author: authorDavid.documentId,
@@ -1034,8 +981,6 @@ export default {
       title: 'DAO Governance: Decentralized Organizations and Their Challenges',
       slug: 'dao-governance-decentralized-organizations-and-their-challenges',
       excerpt: 'Decentralized Autonomous Organizations (DAOs) promise democratic, transparent governance of protocols and organizations. But the reality of DAO governance reveals both promise and significant challenges.',
-      isFeatured: false,
-      isTrending: true,
       site: cryptoniceSite.documentId,
       category: cryptoniceCategories['web3'].documentId,
       author: authorDavid.documentId,
@@ -1056,8 +1001,6 @@ export default {
       title: 'Crypto Regulation in 2026: Global Policy Landscape',
       slug: 'crypto-regulation-in-2026-global-policy-landscape',
       excerpt: 'Regulatory clarity — or lack thereof — remains the biggest wildcard for crypto markets. We survey the regulatory landscape across the U.S., EU, Asia, and emerging markets heading into 2026.',
-      isFeatured: false,
-      isTrending: true,
       site: cryptoniceSite.documentId,
       category: cryptoniceCategories['regulation'].documentId,
       author: authorDavid.documentId,
@@ -1167,8 +1110,6 @@ export default {
         title: art.title,
         slug: art.slug,
         excerpt: art.excerpt,
-        isFeatured: false,
-        isTrending: false,
         site: cryptoniceSite.documentId,
         category: cryptoniceCategories[art.category].documentId,
         author: authorDavid.documentId,
@@ -1199,8 +1140,6 @@ export default {
       title: 'The Ultimate Morning Skincare Routine for Every Skin Type',
       slug: 'the-ultimate-morning-skincare-routine-for-every-skin-type',
       excerpt: 'Your morning skincare routine sets the tone for your skin\'s health throughout the day. This comprehensive guide covers the right products and techniques for every skin type — from oily to dry to sensitive.',
-      isFeatured: true,
-      isTrending: false,
       site: healthSite.documentId,
       category: healthCategories['skincare'].documentId,
       author: authorAmara.documentId,
@@ -1233,8 +1172,6 @@ export default {
       title: 'HIIT vs Steady-State Cardio: Which Burns More Fat?',
       slug: 'hiit-vs-steady-state-cardio-which-burns-more-fat',
       excerpt: 'The HIIT vs steady-state cardio debate has divided fitness enthusiasts for years. Science provides clear answers about which is more effective for fat loss, cardiovascular health, and overall fitness.',
-      isFeatured: true,
-      isTrending: false,
       site: healthSite.documentId,
       category: healthCategories['fitness'].documentId,
       author: authorAmara.documentId,
@@ -1265,8 +1202,6 @@ export default {
       title: 'The Science Behind Retinol: Benefits, Usage, and Myths Debunked',
       slug: 'the-science-behind-retinol-benefits-usage-and-myths-debunked',
       excerpt: 'Retinol is dermatology\'s most evidence-backed anti-aging ingredient. Learn the science, the correct way to incorporate it into your routine, and the myths that stop people from using it.',
-      isFeatured: true,
-      isTrending: false,
       site: healthSite.documentId,
       category: healthCategories['skincare'].documentId,
       author: authorAmara.documentId,
@@ -1290,8 +1225,6 @@ export default {
       title: 'Mindfulness Meditation: A Beginner\'s 21-Day Guide',
       slug: 'mindfulness-meditation-a-beginners-21-day-guide',
       excerpt: 'Scientific evidence for mindfulness meditation\'s mental and physical health benefits is overwhelming. This structured 21-day beginner\'s program helps you build a sustainable practice from scratch.',
-      isFeatured: true,
-      isTrending: false,
       site: healthSite.documentId,
       category: healthCategories['mental-health'].documentId,
       author: authorAmara.documentId,
@@ -1317,8 +1250,6 @@ export default {
       title: '10 High-Protein Breakfast Ideas for Sustained Energy',
       slug: '10-high-protein-breakfast-ideas-for-sustained-energy',
       excerpt: 'A protein-rich breakfast stabilizes blood sugar, reduces hunger hormones, and sustains energy through the morning. These 10 delicious, practical recipes make high-protein mornings easy.',
-      isFeatured: true,
-      isTrending: false,
       site: healthSite.documentId,
       category: healthCategories['nutrition'].documentId,
       author: authorAmara.documentId,
@@ -1346,8 +1277,6 @@ export default {
       title: 'Understanding Your Skin Barrier: Why It Matters More Than Products',
       slug: 'understanding-your-skin-barrier-why-it-matters-more-than-products',
       excerpt: 'Your skin barrier is the foundation of healthy skin. No serum or treatment works optimally on a compromised barrier. Learn what the skin barrier is, how to protect it, and how to repair damage.',
-      isFeatured: true,
-      isTrending: false,
       site: healthSite.documentId,
       category: healthCategories['skincare'].documentId,
       author: authorAmara.documentId,
@@ -1371,8 +1300,6 @@ export default {
       title: 'The Anti-Inflammatory Diet: Foods That Heal and Harm',
       slug: 'the-anti-inflammatory-diet-foods-that-heal-and-harm',
       excerpt: 'Chronic inflammation underlies most modern diseases. The foods you eat either fight inflammation or fuel it. This science-backed guide reveals what to eat more of and what to minimize.',
-      isFeatured: false,
-      isTrending: true,
       site: healthSite.documentId,
       category: healthCategories['nutrition'].documentId,
       author: authorAmara.documentId,
@@ -1393,8 +1320,6 @@ export default {
       title: 'Sleep Hygiene: The Complete Science-Based Guide to Better Sleep',
       slug: 'sleep-hygiene-the-complete-science-based-guide-to-better-sleep',
       excerpt: 'Poor sleep is a modern epidemic with devastating health consequences. This evidence-based guide covers circadian rhythm optimization, bedroom environment, and behavioral strategies for transformative sleep.',
-      isFeatured: false,
-      isTrending: true,
       site: healthSite.documentId,
       category: healthCategories['wellness'].documentId,
       author: authorAmara.documentId,
@@ -1415,8 +1340,6 @@ export default {
       title: 'K-Beauty Trends 2026: The Korean Skincare Innovations Worth Trying',
       slug: 'k-beauty-trends-2026-the-korean-skincare-innovations-worth-trying',
       excerpt: 'Korean beauty continues to lead global skincare innovation. From fermented ingredients to skin barrier technology, discover the K-Beauty trends that are reshaping the beauty industry in 2026.',
-      isFeatured: false,
-      isTrending: true,
       site: healthSite.documentId,
       category: healthCategories['beauty-trends'].documentId,
       author: authorAmara.documentId,
@@ -1437,8 +1360,6 @@ export default {
       title: 'Home Workout Plan: Build Strength Without a Gym',
       slug: 'home-workout-plan-build-strength-without-a-gym',
       excerpt: 'You don\'t need a gym membership to build strength and improve your physique. This complete 12-week home workout program uses bodyweight exercises and minimal equipment for maximum results.',
-      isFeatured: false,
-      isTrending: true,
       site: healthSite.documentId,
       category: healthCategories['fitness'].documentId,
       author: authorAmara.documentId,
@@ -1462,8 +1383,6 @@ export default {
       title: 'Natural Hair Care: Transitioning and Thriving Without Chemicals',
       slug: 'natural-hair-care-transitioning-and-thriving-without-chemicals',
       excerpt: 'Transitioning to natural hair care reduces chemical exposure and can dramatically improve long-term hair health. This guide covers the transition process, natural ingredients that work, and building a sustainable routine.',
-      isFeatured: false,
-      isTrending: true,
       site: healthSite.documentId,
       category: healthCategories['hair-care'].documentId,
       author: authorAmara.documentId,
@@ -1484,8 +1403,6 @@ export default {
       title: 'Mental Health First Aid: Recognizing and Responding to Crisis',
       slug: 'mental-health-first-aid-recognizing-and-responding-to-crisis',
       excerpt: 'Mental health crises affect one in four people. Knowing how to recognize warning signs and respond appropriately can literally save lives. This guide covers the essentials of mental health first aid.',
-      isFeatured: false,
-      isTrending: true,
       site: healthSite.documentId,
       category: healthCategories['mental-health'].documentId,
       author: authorAmara.documentId,
@@ -1619,8 +1536,6 @@ export default {
         title: art.title,
         slug: art.slug,
         excerpt: art.excerpt,
-        isFeatured: art.featured,
-        isTrending: art.trending,
         site: healthSite.documentId,
         category: healthCategories[art.category].documentId,
         author: authorAmara.documentId,
@@ -1690,251 +1605,71 @@ export default {
     }
 
     // ─────────────────────────────────────────────
-    // STEP 3I: AD UNITS (GLOBAL)
+    // STEP 3I: AD GROUPS (PER SITE)
     // R2.4: draftAndPublish:false → NEVER pass status
+    // Each site gets its own ad group with dummy placeholder codes.
+    // Format: [{"code": "<html>", "height": N}]
     // ─────────────────────────────────────────────
-    strapi.log.info('[Seed] Creating AdUnits...');
+    strapi.log.info('[Seed] Creating AdGroups...');
 
-    const adUnit1 = await strapi.documents('api::ad-unit.ad-unit').create({
+    // Helper: build a placeholder AdCodeEntry JSON array for a given slot name and size label
+    const adGroupSlot = (slotName: string, sizeLabel: string, height: number): string =>
+      JSON.stringify([
+        {
+          code: `<div style="background:#f0f0f0;display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-family:sans-serif;color:#999;border:1px dashed #ccc;"><span>Ads Space Available — ${slotName} — Recommended: ${sizeLabel}</span></div>`,
+          height,
+        },
+      ]);
+
+    // ── GlimpseIt Ad Group ──────────────────────────────────────────────────
+    await strapi.documents('api::ad-group.ad-group').create({
       data: {
-        name: 'Banner Rotation Primary',
-        type: 'banner',
-        isActive: true,
-        codes: [
-          adCode('AdSense', '1', 'banner'),
-          adCode('Ezoic', '2', 'banner'),
-          adCode('Generic', '3', 'banner'),
-        ],
-      },
-    });
-
-    const adUnit2 = await strapi.documents('api::ad-unit.ad-unit').create({
-      data: {
-        name: 'Banner Rotation Secondary',
-        type: 'banner',
-        isActive: true,
-        codes: [
-          adCode('AdSense Secondary', '1', 'banner'),
-          adCode('Generic Secondary', '2', 'banner'),
-        ],
-      },
-    });
-
-    const adUnit3 = await strapi.documents('api::ad-unit.ad-unit').create({
-      data: {
-        name: 'Native Object Primary',
-        type: 'native_object',
-        isActive: true,
-        codes: [
-          `<div class="native-ad-placeholder" style="background:#f5f5f5;border:1px solid #e0e0e0;border-radius:8px;padding:16px;font-family:sans-serif;"><div style="color:#999;font-size:12px;margin-bottom:8px;">Sponsored</div><div style="font-weight:bold;color:#333;margin-bottom:6px;">Discover Top Financial Products</div><div style="color:#666;font-size:13px;">Compare rates, find the best deals for your needs.</div></div><script>console.log("Taboola native ad loaded: primary slot");</script>`,
-          `<div class="native-ad-placeholder" style="background:#f9f9f9;border:1px solid #e8e8e8;border-radius:8px;padding:16px;font-family:sans-serif;"><div style="color:#aaa;font-size:11px;text-transform:uppercase;margin-bottom:8px;">Advertisement</div><div style="font-weight:600;color:#222;margin-bottom:6px;">Outbrain Content Recommendation</div><div style="color:#555;font-size:13px;">Stories you might enjoy from around the web.</div></div><script>console.log("Outbrain native ad loaded: primary slot");</script>`,
-        ],
-      },
-    });
-
-    const adUnit4 = await strapi.documents('api::ad-unit.ad-unit').create({
-      data: {
-        name: 'Native Object Secondary',
-        type: 'native_object',
-        isActive: true,
-        codes: [
-          `<div class="native-ad-placeholder" style="background:#fafafa;border:1px dashed #d0d0d0;border-radius:6px;padding:14px;font-family:sans-serif;"><div style="color:#bbb;font-size:11px;margin-bottom:6px;">Sponsored Content</div><div style="font-weight:bold;color:#444;margin-bottom:4px;">Related Content You Might Like</div><div style="color:#666;font-size:12px;">Powered by content discovery network.</div></div><script>console.log("Native secondary ad loaded: slot A");</script>`,
-          `<div class="native-ad-placeholder" style="background:#ffffff;border:1px solid #ebebeb;border-radius:6px;padding:14px;font-family:sans-serif;box-shadow:0 1px 3px rgba(0,0,0,0.05);"><div style="color:#aaa;font-size:11px;margin-bottom:6px;">Recommended</div><div style="font-weight:600;color:#333;margin-bottom:4px;">Trending Now Across the Web</div><div style="color:#777;font-size:12px;">Curated recommendations for you.</div></div><script>console.log("Native secondary ad loaded: slot B");</script>`,
-        ],
-      },
-    });
-
-    strapi.log.info('[Seed] AdUnits created.');
-
-    // ─────────────────────────────────────────────
-    // STEP 3J: AD SLOTS (GLOBAL)
-    // R2.4: draftAndPublish:false → NEVER pass status
-    // ─────────────────────────────────────────────
-    strapi.log.info('[Seed] Creating AdSlots...');
-
-    await strapi.documents('api::ad-slot.ad-slot').create({
-      data: {
-        slotKey: 'home_hero_billboard',
-        placement: 'header',
-        sizePreset: 'BILLBOARD',
+        name: 'GlimpseIt — Default Ad Group',
         enabled: true,
-        deviceTarget: 'all',
-        responsiveSizes: { mobile: 'MOBILE_BANNER_100', tablet: 'LEADERBOARD', desktop: 'BILLBOARD' },
-        lazyDelayMs: 2000,
-        adUnit: adUnit1.documentId,
+        sites: [glimpseitSite.documentId],
+        headerBanner: JSON.parse(adGroupSlot('Header Banner', '728×90', 90)),
+        footerBanner: JSON.parse(adGroupSlot('Footer Banner', '728×90', 90)),
+        sidebarBanner: JSON.parse(adGroupSlot('Sidebar Banner', '300×250', 250)),
+        inArticleBanner: JSON.parse(adGroupSlot('In-Article Banner', '300×250', 250)),
+        inArticleNative: JSON.parse(adGroupSlot('In-Article Native', '300×250 (flexible)', 250)),
+        betweenListBanner: JSON.parse(adGroupSlot('Between-List Banner', '728×90', 90)),
+        stickyBottom: JSON.parse(adGroupSlot('Sticky Bottom', '728×90', 50)),
       },
     });
 
-    await strapi.documents('api::ad-slot.ad-slot').create({
+    // ── Cryptonice Ad Group ─────────────────────────────────────────────────
+    await strapi.documents('api::ad-group.ad-group').create({
       data: {
-        slotKey: 'home_trending_leaderboard',
-        placement: 'between_list',
-        sizePreset: 'LEADERBOARD',
+        name: 'Cryptonice — Default Ad Group',
         enabled: true,
-        deviceTarget: 'desktop',
-        responsiveSizes: null,
-        lazyDelayMs: 2000,
-        adUnit: adUnit2.documentId,
+        sites: [cryptoniceSite.documentId],
+        headerBanner: JSON.parse(adGroupSlot('Header Banner', '728×90', 90)),
+        footerBanner: JSON.parse(adGroupSlot('Footer Banner', '728×90', 90)),
+        sidebarBanner: JSON.parse(adGroupSlot('Sidebar Banner', '300×250', 250)),
+        inArticleBanner: JSON.parse(adGroupSlot('In-Article Banner', '300×250', 250)),
+        inArticleNative: JSON.parse(adGroupSlot('In-Article Native', '300×250 (flexible)', 250)),
+        betweenListBanner: JSON.parse(adGroupSlot('Between-List Banner', '728×90', 90)),
+        stickyBottom: JSON.parse(adGroupSlot('Sticky Bottom', '728×90', 50)),
       },
     });
 
-    await strapi.documents('api::ad-slot.ad-slot').create({
+    // ── Health & Beauty Ad Group ────────────────────────────────────────────
+    await strapi.documents('api::ad-group.ad-group').create({
       data: {
-        slotKey: 'article_top_leaderboard',
-        placement: 'header',
-        sizePreset: 'LEADERBOARD',
+        name: 'Health & Beauty — Default Ad Group',
         enabled: true,
-        deviceTarget: 'all',
-        responsiveSizes: { mobile: 'MOBILE_BANNER_100', tablet: 'LEADERBOARD' },
-        lazyDelayMs: 2000,
-        adUnit: adUnit1.documentId,
+        sites: [healthSite.documentId],
+        headerBanner: JSON.parse(adGroupSlot('Header Banner', '728×90', 90)),
+        footerBanner: JSON.parse(adGroupSlot('Footer Banner', '728×90', 90)),
+        sidebarBanner: JSON.parse(adGroupSlot('Sidebar Banner', '300×250', 250)),
+        inArticleBanner: JSON.parse(adGroupSlot('In-Article Banner', '300×250', 250)),
+        inArticleNative: JSON.parse(adGroupSlot('In-Article Native', '300×250 (flexible)', 250)),
+        betweenListBanner: JSON.parse(adGroupSlot('Between-List Banner', '728×90', 90)),
+        stickyBottom: JSON.parse(adGroupSlot('Sticky Bottom', '728×90', 50)),
       },
     });
 
-    await strapi.documents('api::ad-slot.ad-slot').create({
-      data: {
-        slotKey: 'article_sidebar_mrec',
-        placement: 'sidebar',
-        sizePreset: 'MREC',
-        enabled: true,
-        deviceTarget: 'desktop',
-        responsiveSizes: { tablet: 'MREC', desktop: 'HALF_PAGE' },
-        lazyDelayMs: 2000,
-        adUnit: adUnit2.documentId,
-      },
-    });
-
-    await strapi.documents('api::ad-slot.ad-slot').create({
-      data: {
-        slotKey: 'article_inline_1',
-        placement: 'in_article',
-        sizePreset: 'LARGE_MREC',
-        enabled: true,
-        deviceTarget: 'all',
-        responsiveSizes: { mobile: 'MREC', tablet: 'MREC' },
-        lazyDelayMs: 2000,
-        adUnit: adUnit1.documentId,
-      },
-    });
-
-    await strapi.documents('api::ad-slot.ad-slot').create({
-      data: {
-        slotKey: 'article_inline_2',
-        placement: 'in_article',
-        sizePreset: 'MREC',
-        enabled: true,
-        deviceTarget: 'all',
-        responsiveSizes: { mobile: 'MREC' },
-        lazyDelayMs: 2000,
-        adUnit: adUnit2.documentId,
-      },
-    });
-
-    await strapi.documents('api::ad-slot.ad-slot').create({
-      data: {
-        slotKey: 'article_bottom_leaderboard',
-        placement: 'footer',
-        sizePreset: 'LEADERBOARD',
-        enabled: true,
-        deviceTarget: 'all',
-        responsiveSizes: { mobile: 'MOBILE_BANNER_100' },
-        lazyDelayMs: 2000,
-        adUnit: adUnit1.documentId,
-      },
-    });
-
-    await strapi.documents('api::ad-slot.ad-slot').create({
-      data: {
-        slotKey: 'sidebar_skyscraper',
-        placement: 'sidebar',
-        sizePreset: 'WIDE_SKYSCRAPER',
-        enabled: true,
-        deviceTarget: 'desktop',
-        responsiveSizes: null,
-        lazyDelayMs: 2000,
-        adUnit: adUnit2.documentId,
-      },
-    });
-
-    await strapi.documents('api::ad-slot.ad-slot').create({
-      data: {
-        slotKey: 'listing_between_mrec',
-        placement: 'listing_between',
-        sizePreset: 'MREC',
-        enabled: true,
-        deviceTarget: 'all',
-        responsiveSizes: { mobile: 'MOBILE_BANNER_100' },
-        lazyDelayMs: 2000,
-        adUnit: adUnit1.documentId,
-      },
-    });
-
-    await strapi.documents('api::ad-slot.ad-slot').create({
-      data: {
-        slotKey: 'search_top_leaderboard',
-        placement: 'search_top',
-        sizePreset: 'LEADERBOARD',
-        enabled: true,
-        deviceTarget: 'all',
-        responsiveSizes: { mobile: 'MOBILE_BANNER_100' },
-        lazyDelayMs: 2000,
-        adUnit: adUnit2.documentId,
-      },
-    });
-
-    await strapi.documents('api::ad-slot.ad-slot').create({
-      data: {
-        slotKey: 'search_bottom_mrec',
-        placement: 'search_bottom',
-        sizePreset: 'MREC',
-        enabled: true,
-        deviceTarget: 'all',
-        responsiveSizes: null,
-        lazyDelayMs: 2000,
-        adUnit: adUnit1.documentId,
-      },
-    });
-
-    await strapi.documents('api::ad-slot.ad-slot').create({
-      data: {
-        slotKey: 'sticky_bottom_mobile',
-        placement: 'sticky_bottom',
-        sizePreset: 'MOBILE_BANNER_50',
-        enabled: false, // disabled by default
-        deviceTarget: 'mobile',
-        responsiveSizes: null,
-        lazyDelayMs: 2000,
-        adUnit: adUnit1.documentId,
-      },
-    });
-
-    await strapi.documents('api::ad-slot.ad-slot').create({
-      data: {
-        slotKey: 'native_home_feed',
-        placement: 'between_list',
-        sizePreset: 'MREC',
-        enabled: true,
-        deviceTarget: 'all',
-        responsiveSizes: null,
-        lazyDelayMs: 2000,
-        adUnit: adUnit3.documentId,
-      },
-    });
-
-    await strapi.documents('api::ad-slot.ad-slot').create({
-      data: {
-        slotKey: 'native_article_bottom',
-        placement: 'footer',
-        sizePreset: 'LARGE_MREC',
-        enabled: true,
-        deviceTarget: 'all',
-        responsiveSizes: null,
-        lazyDelayMs: 2000,
-        adUnit: adUnit4.documentId,
-      },
-    });
-
-    strapi.log.info('[Seed] AdSlots created.');
-    strapi.log.info('[Seed] ✅ Seed complete! 3 sites, 30 categories, 15 tags, 3 authors, 72 articles, 4 ad units, 14 ad slots.');
+    strapi.log.info('[Seed] AdGroups created.');
+    strapi.log.info('[Seed] ✅ Seed complete! 3 sites, 30 categories, 15 tags, 3 authors, 72 articles, 3 ad groups.');
   },
 };

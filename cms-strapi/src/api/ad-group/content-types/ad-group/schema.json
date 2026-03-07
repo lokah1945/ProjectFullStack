@@ -1,0 +1,78 @@
+{
+  "kind": "collectionType",
+  "collectionName": "ad_groups",
+  "info": {
+    "singularName": "ad-group",
+    "pluralName": "ad-groups",
+    "displayName": "Ad Group",
+    "description": "Ad group — maps ad codes to sites and placement slots. Each slot holds one HTML ad code."
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "enabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "sites": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::site.site"
+    },
+    "headerBanner": {
+      "type": "text"
+    },
+    "headerBannerHeight": {
+      "type": "integer",
+      "default": 90
+    },
+    "footerBanner": {
+      "type": "text"
+    },
+    "footerBannerHeight": {
+      "type": "integer",
+      "default": 90
+    },
+    "sidebarBanner": {
+      "type": "text"
+    },
+    "sidebarBannerHeight": {
+      "type": "integer",
+      "default": 250
+    },
+    "inArticleBanner": {
+      "type": "text"
+    },
+    "inArticleBannerHeight": {
+      "type": "integer",
+      "default": 250
+    },
+    "inArticleNative": {
+      "type": "text"
+    },
+    "inArticleNativeHeight": {
+      "type": "integer",
+      "default": 250
+    },
+    "betweenListBanner": {
+      "type": "text"
+    },
+    "betweenListBannerHeight": {
+      "type": "integer",
+      "default": 90
+    },
+    "stickyBottom": {
+      "type": "text"
+    },
+    "stickyBottomHeight": {
+      "type": "integer",
+      "default": 50
+    }
+  }
+}

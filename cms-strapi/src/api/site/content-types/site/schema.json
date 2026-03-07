@@ -32,6 +32,24 @@
       "type": "boolean",
       "default": true
     },
+    "logo": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "favicon": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "ogImage": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
     "theme": {
       "type": "json"
     },
@@ -42,6 +60,12 @@
       "type": "json"
     },
     "description": {
+      "type": "text"
+    },
+    "headCode": {
+      "type": "text"
+    },
+    "bodyCode": {
       "type": "text"
     },
     "articles": {
