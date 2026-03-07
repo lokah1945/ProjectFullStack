@@ -1,5 +1,5 @@
 // src/app/page.tsx
-// Home page — Featured Hero + AdSlot + Trending Strip + AdSlot + Latest List + NativeAdCard
+// Home page — Featured Hero + AdBanner + Trending Strip + AdBanner + Latest List + NativeAdCard
 
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
@@ -7,7 +7,8 @@ import {
   fetchFeaturedArticles,
   fetchTrendingArticles,
   fetchLatestArticles,
-  fetchAdSlots,
+  fetchAdGroups,
+  pickSiteAds,
   fetchSiteBySlug,
   fetchNavCategories,
 } from '@/lib/strapi';
@@ -15,7 +16,7 @@ import { generateSiteMetadata } from '@/lib/seo';
 import { FeaturedHero } from '@/components/featured-hero';
 import { TrendingStrip } from '@/components/trending-strip';
 import { LatestList } from '@/components/latest-list';
-import { AdSlotComponent } from '@/components/ad-slot';
+import { AdBanner } from '@/components/ad-banner';
 import { NativeAdCard } from '@/components/native-ad-card';
 import { HeaderNav } from '@/components/header-nav';
 import { Footer } from '@/components/footer';
@@ -41,27 +42,24 @@ export default async function HomePage() {
     featuredRes,
     trendingRes,
     latestRes,
-    adSlots,
+    adGroups,
     site,
     categories,
   ] = await Promise.all([
     fetchFeaturedArticles(siteSlug, 5, locale).catch(() => ({ data: [], meta: { pagination: { page: 1, pageSize: 5, pageCount: 0, total: 0 } } })),
     fetchTrendingArticles(siteSlug, 6, locale).catch(() => ({ data: [], meta: { pagination: { page: 1, pageSize: 6, pageCount: 0, total: 0 } } })),
     fetchLatestArticles(siteSlug, 10, 1, locale).catch(() => ({ data: [], meta: { pagination: { page: 1, pageSize: 10, pageCount: 0, total: 0 } } })),
-    fetchAdSlots().catch(() => []),
+    fetchAdGroups(siteSlug).catch(() => []),
     fetchSiteBySlug(siteSlug).catch(() => null),
     fetchNavCategories(siteSlug, locale).catch(() => []),
   ]);
+
+  const siteAds = pickSiteAds(adGroups);
 
   const featuredArticles = featuredRes.data;
   const trendingArticles = trendingRes.data;
   const latestArticles = latestRes.data;
   const latestPagination = latestRes.meta.pagination;
-
-  // Get specific ad slots
-  const heroBillboardSlot = adSlots.find(s => s.slotKey === 'home_hero_billboard');
-  const trendingLeaderboardSlot = adSlots.find(s => s.slotKey === 'home_trending_leaderboard');
-  const nativeHomeFeedSlot = adSlots.find(s => s.slotKey === 'native_home_feed');
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -73,10 +71,10 @@ export default async function HomePage() {
           <FeaturedHero articles={featuredArticles} locale={locale} />
         )}
 
-        {/* Home Hero Billboard Ad */}
-        {heroBillboardSlot && (
+        {/* Header Banner Ad */}
+        {siteAds.headerBanner && (
           <div className="container-content py-4">
-            <AdSlotComponent slot={heroBillboardSlot} />
+            <AdBanner slot={siteAds.headerBanner} />
           </div>
         )}
 
@@ -85,10 +83,10 @@ export default async function HomePage() {
           <TrendingStrip articles={trendingArticles} locale={locale} />
         )}
 
-        {/* Trending Leaderboard Ad */}
-        {trendingLeaderboardSlot && (
+        {/* Between-list Banner Ad */}
+        {siteAds.betweenListBanner && (
           <div className="container-content py-4">
-            <AdSlotComponent slot={trendingLeaderboardSlot} />
+            <AdBanner slot={siteAds.betweenListBanner} />
           </div>
         )}
 
@@ -110,16 +108,10 @@ export default async function HomePage() {
             {/* Sidebar */}
             <aside className="hidden lg:block space-y-6">
               {/* Sidebar ad */}
-              {adSlots.find(s => s.slotKey === 'article_sidebar_mrec') && (
-                <AdSlotComponent
-                  slot={adSlots.find(s => s.slotKey === 'article_sidebar_mrec')!}
-                />
-              )}
+              <AdBanner slot={siteAds.sidebarBanner} />
 
               {/* Native ad */}
-              {nativeHomeFeedSlot && (
-                <NativeAdCard slot={nativeHomeFeedSlot} />
-              )}
+              <NativeAdCard slot={siteAds.inArticleNative} />
             </aside>
           </div>
         </section>

@@ -1,0 +1,4 @@
+# Additional robots directives shared across all domains
+User-agent: *
+Allow: /
+Sitemap: https://example.com/sitemap.xml

@@ -1,19 +1,21 @@
-// src/components/native-ad-card.tsx
-// Native ad card — blends with article list design, uses iframe sandbox for script execution.
-// Accepts AdSlot (code + height) or null. Renders nothing if null.
+// src/components/ad-banner.tsx
+// AdBanner — renders a single ad slot's HTML code inside an iframe sandbox.
+// This approach guarantees ad scripts (including document.write-based ones)
+// execute correctly, since the iframe provides a fresh document context.
 'use client';
 
 import { useMemo, useEffect, useRef, useState } from 'react';
 import type { AdSlot } from '@/types';
 
-interface NativeAdCardProps {
+interface AdBannerProps {
   slot: AdSlot | null;
   className?: string;
 }
 
 /**
- * Build a complete HTML document string for the native ad iframe.
- * Uses a fresh document so scripts (including document.write) work correctly.
+ * Build a complete HTML document string for the ad iframe.
+ * The ad code is placed inside <body> so scripts run in a fresh document
+ * where document.write() still works (critical for Adstera iframe ads).
  */
 function buildSrcdoc(code: string): string {
   return `<!DOCTYPE html>
@@ -24,16 +26,18 @@ function buildSrcdoc(code: string): string {
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html, body { width: 100%; height: 100%; overflow: hidden; background: transparent; }
+  body { display: flex; align-items: center; justify-content: center; }
 </style>
 </head>
 <body>${code}</body>
 </html>`;
 }
 
-export function NativeAdCard({ slot, className = '' }: NativeAdCardProps) {
+export function AdBanner({ slot, className = '' }: AdBannerProps) {
   const outerRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
 
+  // Memoize srcdoc to avoid re-renders
   const srcdoc = useMemo(() => {
     if (!slot) return '';
     return buildSrcdoc(slot.code);
@@ -63,15 +67,11 @@ export function NativeAdCard({ slot, className = '' }: NativeAdCardProps) {
   return (
     <div
       ref={outerRef}
-      className={`relative rounded-xl overflow-hidden border border-gray-100 bg-white shadow-sm ${className}`}
+      className={`ad-banner-container w-full ${className}`}
+      style={{ minHeight: `${slot.height}px`, width: '100%' }}
       role="complementary"
-      aria-label="Sponsored content"
+      aria-label="Advertisement"
     >
-      <div className="absolute top-2 right-2 z-10">
-        <span className="text-[10px] font-semibold text-gray-400 bg-white/90 backdrop-blur-sm border border-gray-100 px-2 py-0.5 rounded-full">
-          Sponsored
-        </span>
-      </div>
       {isVisible && srcdoc && (
         <iframe
           srcDoc={srcdoc}
@@ -85,7 +85,7 @@ export function NativeAdCard({ slot, className = '' }: NativeAdCardProps) {
           scrolling="no"
           sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
           loading="lazy"
-          title="Sponsored content"
+          title="Advertisement"
         />
       )}
     </div>

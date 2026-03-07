@@ -1,0 +1,2 @@
+This is a shared file accessible from all domains.
+Example: cryptonice.online/somefile.txt, glimpseit.online/somefile.txt, healthandbeauty.my.id/somefile.txt

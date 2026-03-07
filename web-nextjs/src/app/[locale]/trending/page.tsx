@@ -1,12 +1,13 @@
 // src/app/[locale]/trending/page.tsx
-// Localized trending articles listing
+// Localized trending articles listing — sorted by view velocity (avg views/hour, 3 days)
 
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import {
-  fetchArticles,
+  fetchTrendingArticles,
   fetchFeaturedArticles,
-  fetchAdSlots,
+  fetchAdGroups,
+  pickSiteAds,
   fetchSiteBySlug,
   fetchNavCategories,
 } from '@/lib/strapi';
@@ -30,44 +31,36 @@ export async function generateMetadata({
 
 interface LocaleTrendingPageProps {
   params: Promise<{ locale: string }>; // R1.1
-  searchParams: Promise<{ page?: string }>; // R1.1
 }
 
-export default async function LocaleTrendingPage({ params, searchParams }: LocaleTrendingPageProps) {
-  // R1.1: await params and searchParams
+export default async function LocaleTrendingPage({ params }: LocaleTrendingPageProps) {
+  // R1.1: await params
   const { locale } = await params;
-  const resolvedSearch = await searchParams;
-  const page = Number(resolvedSearch?.page ?? '1') || 1;
 
   // R1.1: await headers()
   const headersList = await headers();
   const siteSlug = headersList.get('x-site-slug') ?? 'glimpseit';
 
-  const [articlesRes, featuredRes, adSlots, site, categories] = await Promise.all([
-    fetchArticles(siteSlug, {
-      filters: { 'filters[isTrending][$eq]': 'true' },
-      page,
-      pageSize: 10,
-      sort: 'publishedAt:desc',
-      locale,
-      revalidate: 120,
-    }).catch(() => ({
+  const [trendingRes, featuredRes, adGroups, site, categories] = await Promise.all([
+    fetchTrendingArticles(siteSlug, 20, locale).catch(() => ({
       data: [],
-      meta: { pagination: { page: 1, pageSize: 10, pageCount: 0, total: 0 } },
+      meta: { pagination: { page: 1, pageSize: 20, pageCount: 0, total: 0 } },
     })),
-    fetchFeaturedArticles(siteSlug, 5, locale).catch(() => ({ data: [] })),
-    fetchAdSlots().catch(() => []),
+    fetchFeaturedArticles(siteSlug, 5, locale).catch(() => ({ data: [], meta: { pagination: { page: 1, pageSize: 5, pageCount: 0, total: 0 } } })),
+    fetchAdGroups(siteSlug).catch(() => []),
     fetchSiteBySlug(siteSlug).catch(() => null),
     fetchNavCategories(siteSlug, locale).catch(() => []),
   ]);
+
+  const siteAds = pickSiteAds(adGroups);
 
   return (
     <ListingPage
       title="Trending Now"
       subtitle="What everyone is reading right now"
-      articles={articlesRes.data}
-      pagination={articlesRes.meta.pagination}
-      adSlots={adSlots}
+      articles={trendingRes.data}
+      pagination={trendingRes.meta.pagination}
+      siteAds={siteAds}
       site={site}
       categories={categories}
       locale={locale}

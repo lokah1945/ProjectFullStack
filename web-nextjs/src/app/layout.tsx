@@ -34,6 +34,14 @@ export const metadata: Metadata = {
   description: 'Multi-site news and blog platform',
 };
 
+// ── Helper: resolve favicon URL from media field or legacy theme ──────────────
+
+function resolveFaviconUrl(site: Site | null): string | null {
+  if (site?.favicon?.url) return site.favicon.url;
+  if (site?.theme?.faviconUrl) return site.theme.faviconUrl;
+  return null;
+}
+
 // ── Layout Component ──────────────────────────────────────────────────────────
 
 export default async function RootLayout({
@@ -57,6 +65,7 @@ export default async function RootLayout({
   const primaryColor = site?.theme?.primaryColor ?? '#0F4C81';
   const primaryDark = `color-mix(in srgb, ${primaryColor} 80%, black)`;
   const primaryLight = `color-mix(in srgb, ${primaryColor} 15%, white)`;
+  const faviconUrl = resolveFaviconUrl(site);
 
   return (
     <html lang={locale} className={`${inter.variable} ${jakarta.variable}`}>
@@ -73,12 +82,23 @@ export default async function RootLayout({
             `,
           }}
         />
-        {/* Favicon */}
-        {site?.theme?.faviconUrl && (
-          <link rel="icon" href={site.theme.faviconUrl} />
+        {/* Favicon — from Strapi media upload or legacy theme field */}
+        {faviconUrl && (
+          <link rel="icon" href={faviconUrl} />
+        )}
+        {/* Custom head code injection (analytics, meta tags, etc.) */}
+        {site?.headCode && (
+          <div dangerouslySetInnerHTML={{ __html: site.headCode }} />
         )}
       </head>
       <body className="min-h-screen flex flex-col bg-white text-gray-900 antialiased">
+        {/* Custom body code injection (GTM noscript, chat widgets, etc.) */}
+        {site?.bodyCode && (
+          <div
+            dangerouslySetInnerHTML={{ __html: site.bodyCode }}
+            style={{ display: 'contents' }}
+          />
+        )}
         {/* Header and Footer are rendered by child layouts or pages */}
         {/* This root layout provides the shell only */}
         <div className="flex flex-col min-h-screen">

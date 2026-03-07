@@ -7,7 +7,8 @@ import {
   fetchLatestArticles,
   fetchTrendingArticles,
   fetchFeaturedArticles,
-  fetchAdSlots,
+  fetchAdGroups,
+  pickSiteAds,
   fetchSiteBySlug,
   fetchNavCategories,
 } from '@/lib/strapi';
@@ -42,7 +43,7 @@ export default async function LatestPage({ searchParams }: LatestPageProps) {
     articlesRes,
     trendingRes,
     featuredRes,
-    adSlots,
+    adGroups,
     site,
     categories,
   ] = await Promise.all([
@@ -52,10 +53,12 @@ export default async function LatestPage({ searchParams }: LatestPageProps) {
     })),
     fetchTrendingArticles(siteSlug, 5, locale).catch(() => ({ data: [] })),
     fetchFeaturedArticles(siteSlug, 5, locale).catch(() => ({ data: [] })),
-    fetchAdSlots().catch(() => []),
+    fetchAdGroups(siteSlug).catch(() => []),
     fetchSiteBySlug(siteSlug).catch(() => null),
     fetchNavCategories(siteSlug, locale).catch(() => []),
   ]);
+
+  const siteAds = pickSiteAds(adGroups);
 
   return (
     <ListingPage
@@ -63,14 +66,13 @@ export default async function LatestPage({ searchParams }: LatestPageProps) {
       subtitle="Stay up to date with the most recent content"
       articles={articlesRes.data}
       pagination={articlesRes.meta.pagination}
-      adSlots={adSlots}
+      siteAds={siteAds}
       site={site}
       categories={categories}
       locale={locale}
       basePath="/latest"
       trendingArticles={trendingRes.data}
       featuredArticles={featuredRes.data}
-      listingAdSlotKey="listing_between_mrec"
     />
   );
 }

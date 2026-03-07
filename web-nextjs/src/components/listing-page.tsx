@@ -1,9 +1,9 @@
 // src/components/listing-page.tsx
 // Reusable server component wrapper for listing pages (Latest, Featured, Trending, Category)
-import type { Article, StrapiPagination, AdSlot, Site, Category } from '@/types';
+import type { Article, StrapiPagination, SiteAds, Site, Category } from '@/types';
 import { LatestList } from './latest-list';
 import { SidebarWidgets } from './sidebar-widgets';
-import { AdSlotComponent } from './ad-slot';
+import { AdBanner } from './ad-banner';
 import { HeaderNav } from './header-nav';
 import { Footer } from './footer';
 
@@ -13,15 +13,13 @@ interface ListingPageProps {
   description?: string;
   articles: Article[];
   pagination: StrapiPagination;
-  adSlots: AdSlot[];
+  siteAds: SiteAds;
   site: Site | null;
   categories: Category[];
   locale: string;
   basePath: string;
   trendingArticles?: Article[];
   featuredArticles?: Article[];
-  /** Override which ad slot key to use for listing_between */
-  listingAdSlotKey?: string;
   /** View mode for the list */
   layout?: 'list' | 'grid';
 }
@@ -32,26 +30,14 @@ export function ListingPage({
   description,
   articles,
   pagination,
-  adSlots,
+  siteAds,
   site,
   categories,
   locale,
   basePath,
   trendingArticles = [],
   featuredArticles = [],
-  listingAdSlotKey = 'listing_between_mrec',
 }: ListingPageProps) {
-  // Find between-listing ad slot
-  const listingBetweenSlot =
-    adSlots.find((s) => s.slotKey === listingAdSlotKey) ??
-    adSlots.find((s) => s.placement === 'listing_between') ??
-    null;
-
-  // Find top banner slot for listing top
-  const leaderboardSlot = adSlots.find(
-    (s) => s.placement === 'header' && (s.sizePreset === 'LEADERBOARD' || s.sizePreset === 'LARGE_LEADERBOARD')
-  );
-
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <HeaderNav site={site} categories={categories} locale={locale} />
@@ -75,10 +61,10 @@ export function ListingPage({
             )}
           </header>
 
-          {/* Top leaderboard ad */}
-          {leaderboardSlot && (
+          {/* Top header banner ad */}
+          {siteAds.headerBanner && (
             <div className="mb-8 flex justify-center overflow-hidden">
-              <AdSlotComponent slot={leaderboardSlot} />
+              <AdBanner slot={siteAds.headerBanner} className="w-full" />
             </div>
           )}
 
@@ -92,7 +78,7 @@ export function ListingPage({
                 pagination={pagination}
                 locale={locale}
                 basePath={basePath}
-                listingBetweenSlot={listingBetweenSlot}
+                betweenListSlot={siteAds.betweenListBanner}
               />
             </div>
 
@@ -101,7 +87,7 @@ export function ListingPage({
               <SidebarWidgets
                 trendingArticles={trendingArticles}
                 featuredArticles={featuredArticles}
-                adSlots={adSlots}
+                sidebarSlot={siteAds.sidebarBanner}
                 locale={locale}
               />
             </aside>

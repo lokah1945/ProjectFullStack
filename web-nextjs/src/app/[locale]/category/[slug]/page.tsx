@@ -8,7 +8,8 @@ import {
   fetchArticlesByCategory,
   fetchCategories,
   fetchTrendingArticles,
-  fetchAdSlots,
+  fetchAdGroups,
+  pickSiteAds,
   fetchSiteBySlug,
   fetchNavCategories,
 } from '@/lib/strapi';
@@ -60,14 +61,14 @@ export default async function LocaleCategoryPage({ params, searchParams }: Local
   const headersList = await headers();
   const siteSlug = headersList.get('x-site-slug') ?? 'glimpseit';
 
-  const [articlesRes, allCategories, trendingRes, adSlots, site] = await Promise.all([
+  const [articlesRes, allCategories, trendingRes, adGroups, site] = await Promise.all([
     fetchArticlesByCategory(siteSlug, slug, page, 10, locale).catch(() => ({
       data: [],
       meta: { pagination: { page: 1, pageSize: 10, pageCount: 0, total: 0 } },
     })),
     fetchCategories(siteSlug, locale).catch(() => []),
     fetchTrendingArticles(siteSlug, 5, locale).catch(() => ({ data: [] })),
-    fetchAdSlots().catch(() => []),
+    fetchAdGroups(siteSlug).catch(() => []),
     fetchSiteBySlug(siteSlug).catch(() => null),
   ]);
 
@@ -76,6 +77,7 @@ export default async function LocaleCategoryPage({ params, searchParams }: Local
 
   if (!category && articlesRes.data.length === 0) notFound();
 
+  const siteAds = pickSiteAds(adGroups);
   const categoryName = category?.name ?? slug.replace(/-/g, ' ');
 
   return (
@@ -84,13 +86,12 @@ export default async function LocaleCategoryPage({ params, searchParams }: Local
       subtitle={`Browse all articles in ${categoryName}`}
       articles={articlesRes.data}
       pagination={articlesRes.meta.pagination}
-      adSlots={adSlots}
+      siteAds={siteAds}
       site={site}
       categories={navCategories}
       locale={locale}
       basePath={`/${locale}/category/${slug}`}
       trendingArticles={trendingRes.data}
-      listingAdSlotKey="listing_between_mrec"
     />
   );
 }

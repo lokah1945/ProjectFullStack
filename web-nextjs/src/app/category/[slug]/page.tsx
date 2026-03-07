@@ -8,7 +8,8 @@ import {
   fetchArticlesByCategory,
   fetchCategories,
   fetchTrendingArticles,
-  fetchAdSlots,
+  fetchAdGroups,
+  pickSiteAds,
   fetchSiteBySlug,
   fetchNavCategories,
 } from '@/lib/strapi';
@@ -61,7 +62,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
     articlesRes,
     allCategories,
     trendingRes,
-    adSlots,
+    adGroups,
     site,
   ] = await Promise.all([
     fetchArticlesByCategory(siteSlug, slug, page, 10, locale).catch(() => ({
@@ -70,7 +71,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
     })),
     fetchCategories(siteSlug, locale).catch(() => []),
     fetchTrendingArticles(siteSlug, 5, locale).catch(() => ({ data: [] })),
-    fetchAdSlots().catch(() => []),
+    fetchAdGroups(siteSlug).catch(() => []),
     fetchSiteBySlug(siteSlug).catch(() => null),
   ]);
 
@@ -85,6 +86,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
     notFound();
   }
 
+  const siteAds = pickSiteAds(adGroups);
   const categoryName = category?.name ?? slug.replace(/-/g, ' ');
 
   return (
@@ -93,13 +95,12 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
       subtitle={`Browse all articles in ${categoryName}`}
       articles={articlesRes.data}
       pagination={articlesRes.meta.pagination}
-      adSlots={adSlots}
+      siteAds={siteAds}
       site={site}
       categories={navCategories}
       locale={locale}
       basePath={`/category/${slug}`}
       trendingArticles={trendingRes.data}
-      listingAdSlotKey="listing_between_mrec"
     />
   );
 }

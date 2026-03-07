@@ -1,0 +1,3 @@
+google.com, pub-HEALTH-000000, DIRECT, f08c47fec0942fa0
+# ads.txt khusus untuk healthandbeauty.my.id
+# Ganti dengan ad network entries yang sesuai

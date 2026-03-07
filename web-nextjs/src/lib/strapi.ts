@@ -7,6 +7,8 @@ import type {
   Article,
   Category,
   Site,
+  AdGroup,
+  SiteAds,
   AdSlot,
   Tag,
   Author,
@@ -72,7 +74,7 @@ export async function fetchStrapiPublic<T>(
 // ─────────────────────────────────────────────
 
 const ARTICLE_POPULATE =
-  'populate[coverImage]=true&populate[category]=true&populate[tags]=true&populate[author][populate][avatar]=true&populate[site]=true';
+  'populate[0]=coverImage&populate[1]=category&populate[2]=tags&populate[3]=author.avatar&populate[4]=site';
 
 export async function fetchArticles(
   siteSlug: string,
@@ -112,30 +114,66 @@ export async function fetchArticles(
   return fetchStrapi<StrapiListResponse<Article>>(path, { revalidate });
 }
 
+/**
+ * Fetch featured articles — sorted by total views in last 3 days.
+ * Uses custom endpoint GET /api/articles/featured (auth: false).
+ * Falls back to latest articles when no view data exists yet.
+ */
 export async function fetchFeaturedArticles(
   siteSlug: string,
   limit = 5,
   locale = 'en'
 ): Promise<StrapiListResponse<Article>> {
-  return fetchArticles(siteSlug, {
-    filters: { 'filters[isFeatured][$eq]': 'true' },
-    pageSize: limit,
+  const params = new URLSearchParams({
+    site: siteSlug,
+    limit: String(limit),
     locale,
-    revalidate: 120,
   });
+
+  try {
+    return await fetchStrapiPublic<StrapiListResponse<Article>>(
+      `/api/articles/featured?${params.toString()}`,
+      { revalidate: 120 }
+    );
+  } catch {
+    // Fallback: return latest articles via standard endpoint
+    return fetchArticles(siteSlug, {
+      pageSize: limit,
+      locale,
+      revalidate: 120,
+    });
+  }
 }
 
+/**
+ * Fetch trending articles — sorted by view velocity (avg views/hour) in last 3 days.
+ * Uses custom endpoint GET /api/articles/trending (auth: false).
+ * Falls back to latest articles when no view data exists yet.
+ */
 export async function fetchTrendingArticles(
   siteSlug: string,
   limit = 6,
   locale = 'en'
 ): Promise<StrapiListResponse<Article>> {
-  return fetchArticles(siteSlug, {
-    filters: { 'filters[isTrending][$eq]': 'true' },
-    pageSize: limit,
+  const params = new URLSearchParams({
+    site: siteSlug,
+    limit: String(limit),
     locale,
-    revalidate: 120,
   });
+
+  try {
+    return await fetchStrapiPublic<StrapiListResponse<Article>>(
+      `/api/articles/trending?${params.toString()}`,
+      { revalidate: 120 }
+    );
+  } catch {
+    // Fallback: return latest articles via standard endpoint
+    return fetchArticles(siteSlug, {
+      pageSize: limit,
+      locale,
+      revalidate: 120,
+    });
+  }
 }
 
 export async function fetchLatestArticles(
@@ -164,7 +202,7 @@ export async function fetchArticleBySlug(
     locale,
   });
 
-  const path = `/api/articles?${params.toString()}&${ARTICLE_POPULATE}&populate[content]=true`;
+  const path = `/api/articles?${params.toString()}&${ARTICLE_POPULATE}`;
 
   try {
     const res = await fetchStrapi<StrapiListResponse<Article>>(path, {
@@ -181,7 +219,7 @@ export async function fetchArticle(
   locale = 'en'
 ): Promise<Article | null> {
   const params = new URLSearchParams({ locale });
-  const path = `/api/articles/${documentId}?${params.toString()}&${ARTICLE_POPULATE}&populate[content]=true`;
+  const path = `/api/articles/${documentId}?${params.toString()}&${ARTICLE_POPULATE}`;
 
   try {
     const res = await fetchStrapi<StrapiSingleResponse<Article>>(path, {
@@ -318,7 +356,7 @@ export async function fetchTags(
 export async function fetchAuthorBySlug(slug: string): Promise<Author | null> {
   const params = new URLSearchParams({
     'filters[slug][$eq]': slug,
-    'populate[avatar]=true': 'true',
+    'populate[0]': 'avatar',
   });
 
   const path = `/api/authors?${params.toString()}`;
@@ -353,7 +391,10 @@ export async function fetchSiteConfig(
 export async function fetchSiteBySlug(slug: string): Promise<Site | null> {
   const params = new URLSearchParams({
     'filters[slug][$eq]': slug,
-    'populate[categories]=true': 'true',
+    'populate[0]': 'categories',
+    'populate[1]': 'logo',
+    'populate[2]': 'favicon',
+    'populate[3]': 'ogImage',
   });
 
   const path = `/api/sites?${params.toString()}`;
@@ -380,43 +421,110 @@ export async function fetchAllSites(): Promise<Site[]> {
 }
 
 // ─────────────────────────────────────────────
-// Ad Slot Helpers
+// Ad Group Helpers
 // ─────────────────────────────────────────────
 
-export async function fetchAdSlots(): Promise<AdSlot[]> {
+/**
+ * Fetch all enabled ad groups for a specific site.
+ *
+ * Strategy: fetch ALL ad groups via authenticated core REST API (with Bearer token),
+ * populate the `sites` relation, then filter client-side by siteSlug.
+ */
+export async function fetchAdGroups(siteSlug: string): Promise<AdGroup[]> {
   const params = new URLSearchParams({
     'filters[enabled][$eq]': 'true',
-    'pagination[pageSize]': '50',
-    'populate[adUnit]=true': 'true',
+    'pagination[pageSize]': '100',
+    'populate[sites][fields][0]': 'slug',
   });
 
-  const path = `/api/ad-slots?${params.toString()}`;
+  const path = `/api/ad-groups?${params.toString()}`;
   try {
-    const res = await fetchStrapi<StrapiListResponse<AdSlot>>(path, {
-      revalidate: 300,
+    const res = await fetchStrapi<StrapiListResponse<AdGroup>>(path, {
+      revalidate: 30,
     });
-    return res.data ?? [];
-  } catch {
-    return [];
+
+    const allGroups = res.data ?? [];
+
+    // Client-side filter: only groups linked to the requested site
+    return allGroups.filter((group) => {
+      if (!group.sites || !Array.isArray(group.sites)) return false;
+      return group.sites.some((s) => s.slug === siteSlug);
+    });
+  } catch (err) {
+    console.error(
+      '[fetchAdGroups] Failed to fetch ad groups via authenticated API.',
+      'If 403: ensure your API Token (Settings → API Tokens) has "find" permission for Ad-group.',
+      err
+    );
+
+    // Fallback: try custom public endpoint (auth: false)
+    try {
+      const fallbackPath = `/api/ad-groups/by-site?site=${encodeURIComponent(siteSlug)}`;
+      const fallbackRes = await fetchStrapiPublic<{ data: AdGroup[] }>(fallbackPath, {
+        revalidate: 30,
+      });
+      return fallbackRes.data ?? [];
+    } catch (fallbackErr) {
+      console.error(
+        '[fetchAdGroups] Fallback also failed. Ads will not render.',
+        fallbackErr
+      );
+      return [];
+    }
   }
 }
 
-export async function fetchAdSlotByKey(slotKey: string): Promise<AdSlot | null> {
-  const params = new URLSearchParams({
-    'filters[slotKey][$eq]': slotKey,
-    'filters[enabled][$eq]': 'true',
-    'populate[adUnit]=true': 'true',
-  });
+/**
+ * Helper to resolve a single ad slot from an AdGroup field.
+ * Returns AdSlot if code is non-empty, null otherwise.
+ */
+function resolveSlot(
+  code: string | null | undefined,
+  height: number | null | undefined,
+  defaultHeight: number
+): AdSlot | null {
+  if (!code || code.trim() === '') return null;
+  return { code, height: height ?? defaultHeight };
+}
 
-  const path = `/api/ad-slots?${params.toString()}`;
-  try {
-    const res = await fetchStrapi<StrapiListResponse<AdSlot>>(path, {
-      revalidate: 300,
-    });
-    return res.data?.[0] ?? null;
-  } catch {
-    return null;
-  }
+/**
+ * Pick one random enabled AdGroup and resolve all its slots into SiteAds.
+ *
+ * Logic:
+ *   1. If no groups → all slots are null (no ads)
+ *   2. If multiple groups → pick one at random (rotation at group level)
+ *   3. Each slot: non-empty code → AdSlot, empty/null → null
+ *
+ * NOTE: This runs on the server during SSR. The random pick means
+ * different page renders may show different ad groups. For consistent
+ * rotation across a session, consider cookie-based group selection.
+ */
+export function pickSiteAds(groups: AdGroup[]): SiteAds {
+  const empty: SiteAds = {
+    headerBanner: null,
+    footerBanner: null,
+    sidebarBanner: null,
+    inArticleBanner: null,
+    inArticleNative: null,
+    betweenListBanner: null,
+    stickyBottom: null,
+  };
+
+  if (!groups || groups.length === 0) return empty;
+
+  // Pick one random group
+  const group = groups[Math.floor(Math.random() * groups.length)];
+  if (!group.enabled) return empty;
+
+  return {
+    headerBanner: resolveSlot(group.headerBanner, group.headerBannerHeight, 90),
+    footerBanner: resolveSlot(group.footerBanner, group.footerBannerHeight, 90),
+    sidebarBanner: resolveSlot(group.sidebarBanner, group.sidebarBannerHeight, 250),
+    inArticleBanner: resolveSlot(group.inArticleBanner, group.inArticleBannerHeight, 250),
+    inArticleNative: resolveSlot(group.inArticleNative, group.inArticleNativeHeight, 250),
+    betweenListBanner: resolveSlot(group.betweenListBanner, group.betweenListBannerHeight, 90),
+    stickyBottom: resolveSlot(group.stickyBottom, group.stickyBottomHeight, 50),
+  };
 }
 
 // ─────────────────────────────────────────────

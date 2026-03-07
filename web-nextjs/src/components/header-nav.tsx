@@ -53,6 +53,16 @@ function ChevronIcon({ className = 'w-4 h-4' }: { className?: string }) {
   );
 }
 
+/**
+ * Resolves the logo URL from new media field or legacy theme.logoUrl.
+ * Prefers site.logo (media upload) over site.theme.logoUrl (deprecated string).
+ */
+function resolveLogoUrl(site: Site | null): string | null {
+  if (site?.logo?.url) return site.logo.url;
+  if (site?.theme?.logoUrl) return site.theme.logoUrl;
+  return null;
+}
+
 export function HeaderNav({ site, categories, locale }: HeaderNavProps) {
   const prefix = locale !== 'en' ? `/${locale}` : '';
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -92,6 +102,7 @@ export function HeaderNav({ site, categories, locale }: HeaderNavProps) {
   }, [mobileOpen]);
 
   const primaryColor = site?.theme?.primaryColor ?? '#0F4C81';
+  const logoUrl = resolveLogoUrl(site);
 
   return (
     <>
@@ -111,10 +122,10 @@ export function HeaderNav({ site, categories, locale }: HeaderNavProps) {
               className="flex items-center gap-2.5 flex-shrink-0 group"
               aria-label={`${site?.name ?? 'Home'} — Go to homepage`}
             >
-              {site?.theme?.logoUrl ? (
+              {logoUrl ? (
                 <Image
-                  src={site.theme.logoUrl}
-                  alt={`${site.name} logo`}
+                  src={logoUrl}
+                  alt={site?.logo?.alternativeText ?? `${site?.name ?? 'Site'} logo`}
                   width={140}
                   height={36}
                   className="h-8 w-auto object-contain"

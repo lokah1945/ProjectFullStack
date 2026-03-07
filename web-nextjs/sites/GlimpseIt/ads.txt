@@ -1,0 +1,3 @@
+google.com, pub-GLIMPSE-000000, DIRECT, f08c47fec0942fa0
+# ads.txt khusus untuk glimpseit.online
+# Ganti dengan ad network entries yang sesuai

@@ -1,12 +1,13 @@
 // src/app/[locale]/featured/page.tsx
-// Localized featured articles listing
+// Localized featured articles listing — sorted by total views in last 3 days
 
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import {
-  fetchArticles,
+  fetchFeaturedArticles,
   fetchTrendingArticles,
-  fetchAdSlots,
+  fetchAdGroups,
+  pickSiteAds,
   fetchSiteBySlug,
   fetchNavCategories,
 } from '@/lib/strapi';
@@ -30,44 +31,36 @@ export async function generateMetadata({
 
 interface LocaleFeaturedPageProps {
   params: Promise<{ locale: string }>; // R1.1
-  searchParams: Promise<{ page?: string }>; // R1.1
 }
 
-export default async function LocaleFeaturedPage({ params, searchParams }: LocaleFeaturedPageProps) {
-  // R1.1: await params and searchParams
+export default async function LocaleFeaturedPage({ params }: LocaleFeaturedPageProps) {
+  // R1.1: await params
   const { locale } = await params;
-  const resolvedSearch = await searchParams;
-  const page = Number(resolvedSearch?.page ?? '1') || 1;
 
   // R1.1: await headers()
   const headersList = await headers();
   const siteSlug = headersList.get('x-site-slug') ?? 'glimpseit';
 
-  const [articlesRes, trendingRes, adSlots, site, categories] = await Promise.all([
-    fetchArticles(siteSlug, {
-      filters: { 'filters[isFeatured][$eq]': 'true' },
-      page,
-      pageSize: 10,
-      sort: 'publishedAt:desc',
-      locale,
-      revalidate: 120,
-    }).catch(() => ({
+  const [featuredRes, trendingRes, adGroups, site, categories] = await Promise.all([
+    fetchFeaturedArticles(siteSlug, 20, locale).catch(() => ({
       data: [],
-      meta: { pagination: { page: 1, pageSize: 10, pageCount: 0, total: 0 } },
+      meta: { pagination: { page: 1, pageSize: 20, pageCount: 0, total: 0 } },
     })),
-    fetchTrendingArticles(siteSlug, 5, locale).catch(() => ({ data: [] })),
-    fetchAdSlots().catch(() => []),
+    fetchTrendingArticles(siteSlug, 5, locale).catch(() => ({ data: [], meta: { pagination: { page: 1, pageSize: 5, pageCount: 0, total: 0 } } })),
+    fetchAdGroups(siteSlug).catch(() => []),
     fetchSiteBySlug(siteSlug).catch(() => null),
     fetchNavCategories(siteSlug, locale).catch(() => []),
   ]);
 
+  const siteAds = pickSiteAds(adGroups);
+
   return (
     <ListingPage
       title="Featured Articles"
-      subtitle="Hand-picked stories from our editors"
-      articles={articlesRes.data}
-      pagination={articlesRes.meta.pagination}
-      adSlots={adSlots}
+      subtitle="Most viewed articles this week"
+      articles={featuredRes.data}
+      pagination={featuredRes.meta.pagination}
+      siteAds={siteAds}
       site={site}
       categories={categories}
       locale={locale}

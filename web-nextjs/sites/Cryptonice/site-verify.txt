@@ -1,0 +1,3 @@
+This is a site-specific file for Cryptonice only.
+Accessible at: cryptonice.online/site-verify.txt
+NOT accessible from glimpseit.online or healthandbeauty.my.id

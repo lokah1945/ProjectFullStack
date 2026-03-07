@@ -17,6 +17,18 @@ function resolveMediaUrl(url?: string | null): string | undefined {
 }
 
 /**
+ * Resolves OG image URL from new media field or legacy seoDefaults.ogImageUrl.
+ * Priority: article seo > article cover > site.ogImage media > site.seoDefaults.ogImageUrl
+ */
+function resolveOgImageUrl(site: Site | null): string | undefined {
+  // New: media upload field
+  if (site?.ogImage?.url) return resolveMediaUrl(site.ogImage.url);
+  // Legacy: string in seoDefaults JSON
+  if (site?.seoDefaults?.ogImageUrl) return resolveMediaUrl(site.seoDefaults.ogImageUrl);
+  return undefined;
+}
+
+/**
  * Generates Next.js Metadata from site config + optional page/article overrides.
  * Merges: article.seo > site.seoDefaults
  */
@@ -66,8 +78,8 @@ export function generateSiteMetadata(
     ogImage = resolveMediaUrl(article.seo.ogImage);
   } else if (article?.coverImage?.url) {
     ogImage = resolveMediaUrl(article.coverImage.url);
-  } else if (seoDefaults?.ogImageUrl) {
-    ogImage = resolveMediaUrl(seoDefaults.ogImageUrl);
+  } else {
+    ogImage = resolveOgImageUrl(site);
   }
 
   // ── Canonical URL ──────────────────────────

@@ -5,60 +5,64 @@
 // Ad System Types
 // ─────────────────────────────────────────────
 
-export type SizePreset = {
-  width: number;
+/**
+ * Single ad slot — contains raw HTML code and a height for CLS prevention.
+ * The code field is a plain text/html string, pasted directly in Strapi Admin.
+ */
+export interface AdSlot {
+  code: string;
   height: number;
-  minHeight: number;
-};
-
-export type SizePresetMap = {
-  MOBILE_BANNER_50: SizePreset;
-  MOBILE_BANNER_100: SizePreset;
-  MREC: SizePreset;
-  LARGE_MREC: SizePreset;
-  LEADERBOARD: SizePreset;
-  LARGE_LEADERBOARD: SizePreset;
-  BILLBOARD: SizePreset;
-  WIDE_SKYSCRAPER: SizePreset;
-  HALF_PAGE: SizePreset;
-  [key: string]: SizePreset;
-};
-
-export type AdUnitType = 'banner' | 'native_object';
-
-export type AdDeviceTarget = 'all' | 'mobile' | 'tablet' | 'desktop';
-
-export type AdPlacement =
-  | 'header'
-  | 'footer'
-  | 'sidebar'
-  | 'in_article'
-  | 'between_list'
-  | 'sticky_bottom'
-  | 'search_top'
-  | 'search_bottom'
-  | 'listing_between';
-
-export interface AdUnit {
-  documentId: string;
-  name: string;
-  type: AdUnitType;
-  codes: string[];
-  isActive: boolean;
 }
 
-export interface AdSlot {
+/**
+ * Ad Group from Strapi — each slot is a plain text field (HTML code)
+ * plus an integer height field.
+ */
+export interface AdGroup {
   documentId: string;
-  slotKey: string;
-  placement: AdPlacement;
-  sizePreset: string;
+  name: string;
   enabled: boolean;
-  adUnit: AdUnit | null;
-  deviceTarget: AdDeviceTarget;
-  responsiveSizes?: Record<string, string> | null;
-  lazyDelayMs: number;
-  scheduleStart?: string | null;
-  scheduleEnd?: string | null;
+  sites?: Site[];
+  headerBanner?: string | null;
+  headerBannerHeight?: number | null;
+  footerBanner?: string | null;
+  footerBannerHeight?: number | null;
+  sidebarBanner?: string | null;
+  sidebarBannerHeight?: number | null;
+  inArticleBanner?: string | null;
+  inArticleBannerHeight?: number | null;
+  inArticleNative?: string | null;
+  inArticleNativeHeight?: number | null;
+  betweenListBanner?: string | null;
+  betweenListBannerHeight?: number | null;
+  stickyBottom?: string | null;
+  stickyBottomHeight?: number | null;
+}
+
+/**
+ * Resolved ads for a specific site — one random AdGroup is picked,
+ * and each slot is resolved to an AdSlot (code + height) or null.
+ */
+export interface SiteAds {
+  headerBanner: AdSlot | null;
+  footerBanner: AdSlot | null;
+  sidebarBanner: AdSlot | null;
+  inArticleBanner: AdSlot | null;
+  inArticleNative: AdSlot | null;
+  betweenListBanner: AdSlot | null;
+  stickyBottom: AdSlot | null;
+}
+
+// ─────────────────────────────────────────────
+// Media Types
+// ─────────────────────────────────────────────
+
+export interface StrapiMedia {
+  url: string;
+  alternativeText?: string | null;
+  width?: number | null;
+  height?: number | null;
+  formats?: Record<string, { url: string; width: number; height: number }>;
 }
 
 // ─────────────────────────────────────────────
@@ -66,9 +70,11 @@ export interface AdSlot {
 // ─────────────────────────────────────────────
 
 export interface SiteTheme {
-  logoUrl: string;
-  faviconUrl: string;
   primaryColor: string;
+  /** @deprecated Use site.logo media field instead */
+  logoUrl?: string;
+  /** @deprecated Use site.favicon media field instead */
+  faviconUrl?: string;
 }
 
 export interface SiteNavConfig {
@@ -81,7 +87,8 @@ export interface SiteNavConfig {
 export interface SiteSeoDefaults {
   title: string;
   description: string;
-  ogImageUrl: string;
+  /** @deprecated Use site.ogImage media field instead */
+  ogImageUrl?: string;
 }
 
 export interface Site {
@@ -95,6 +102,11 @@ export interface Site {
   navConfig: SiteNavConfig;
   seoDefaults: SiteSeoDefaults;
   description?: string;
+  headCode?: string;
+  bodyCode?: string;
+  logo?: StrapiMedia | null;
+  favicon?: StrapiMedia | null;
+  ogImage?: StrapiMedia | null;
   articles?: Article[];
   categories?: Category[];
 }
@@ -159,8 +171,6 @@ export interface Article {
     formats?: Record<string, { url: string; width: number; height: number }>;
   } | null;
   content?: BlocksContent;
-  isFeatured: boolean;
-  isTrending: boolean;
   seo?: ArticleSeo | null;
   publishedAt: string;
   site?: Site;

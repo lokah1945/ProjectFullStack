@@ -1,14 +1,14 @@
 // src/components/sidebar-widgets.tsx
-// Sticky sidebar: trending top 5, featured top 5, ad slots
+// Sticky sidebar: trending top 5, featured top 5, ad banner
 import type { Article, AdSlot } from '@/types';
 import Image from 'next/image';
 import Link from 'next/link';
-import { AdSlotComponent } from './ad-slot';
+import { AdBanner } from './ad-banner';
 
 interface SidebarWidgetsProps {
   trendingArticles?: Article[];
   featuredArticles?: Article[];
-  adSlots?: AdSlot[];
+  sidebarSlot?: AdSlot | null;
   locale?: string;
 }
 
@@ -113,25 +113,15 @@ function ArticleWidget({ title, articles, locale, icon = 'trending' }: ArticleWi
 export function SidebarWidgets({
   trendingArticles = [],
   featuredArticles = [],
-  adSlots = [],
+  sidebarSlot = null,
   locale = 'en',
 }: SidebarWidgetsProps) {
-  // Find sidebar ad slots
-  const sidebarMrecSlot = adSlots.find(
-    (s) => s.slotKey === 'article_sidebar_mrec' || s.placement === 'sidebar'
-  );
-  const skyscraperSlot = adSlots.find(
-    (s) => s.slotKey === 'sidebar_skyscraper' || s.sizePreset === 'WIDE_SKYSCRAPER'
-  );
-
   return (
     <aside className="space-y-5 lg:sticky lg:top-20">
-      {/* Top sidebar MREC ad */}
-      {sidebarMrecSlot && (
-        <div className="flex justify-center">
-          <AdSlotComponent slot={sidebarMrecSlot} />
-        </div>
-      )}
+      {/* Top sidebar ad banner */}
+      <div className="flex justify-center">
+        <AdBanner slot={sidebarSlot} className="w-full" />
+      </div>
 
       {/* Trending articles */}
       {trendingArticles.length > 0 && (
@@ -141,13 +131,6 @@ export function SidebarWidgets({
           locale={locale}
           icon="trending"
         />
-      )}
-
-      {/* Skyscraper ad slot */}
-      {skyscraperSlot && (
-        <div className="flex justify-center">
-          <AdSlotComponent slot={skyscraperSlot} />
-        </div>
       )}
 
       {/* Featured articles */}

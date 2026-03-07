@@ -10,18 +10,19 @@ import {
   fetchRelatedArticles,
   fetchTrendingArticles,
   fetchFeaturedArticles,
-  fetchAdSlots,
+  fetchAdGroups,
+  pickSiteAds,
   fetchSiteBySlug,
   fetchNavCategories,
 } from '@/lib/strapi';
 import { generateSiteMetadata, generateArticleJsonLd } from '@/lib/seo';
-import { getInArticleSlots } from '@/lib/ad-utils';
-import { AdSlotComponent } from '@/components/ad-slot';
+import { AdBanner } from '@/components/ad-banner';
 import { NativeAdCard } from '@/components/native-ad-card';
 import { SidebarWidgets } from '@/components/sidebar-widgets';
 import { AdInsertionEngine } from '@/components/ad-insertion-engine';
 import { HeaderNav } from '@/components/header-nav';
 import { Footer } from '@/components/footer';
+import { ViewTracker } from '@/components/view-tracker';
 
 // R1.2: Explicit revalidate
 export const revalidate = 300;
@@ -71,12 +72,12 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
   const [
     article,
-    adSlots,
+    adGroups,
     site,
     categories,
   ] = await Promise.all([
     fetchArticleBySlug(siteSlug, slug, locale).catch(() => null),
-    fetchAdSlots().catch(() => []),
+    fetchAdGroups(siteSlug).catch(() => []),
     fetchSiteBySlug(siteSlug).catch(() => null),
     fetchNavCategories(siteSlug, locale).catch(() => []),
   ]);
@@ -84,6 +85,8 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   if (!article) {
     notFound();
   }
+
+  const siteAds = pickSiteAds(adGroups);
 
   // Fetch related articles and sidebar data
   const categorySlug = article.category?.slug ?? '';
@@ -95,16 +98,13 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     fetchFeaturedArticles(siteSlug, 5, locale).then(r => r.data).catch(() => []),
   ]);
 
-  // Get in-article ad slots
-  const inArticleSlots = getInArticleSlots(adSlots);
-  const articleTopLeaderboard = adSlots.find(s => s.slotKey === 'article_top_leaderboard');
-  const articleBottomLeaderboard = adSlots.find(s => s.slotKey === 'article_bottom_leaderboard');
-  const nativeArticleBottom = adSlots.find(s => s.slotKey === 'native_article_bottom');
-
   const jsonLd = generateArticleJsonLd(article, site);
 
   return (
     <div className="min-h-screen flex flex-col">
+      {/* Track article view */}
+      <ViewTracker documentId={article.documentId} />
+
       {/* JSON-LD Structured Data */}
       <script
         type="application/ld+json"
@@ -114,10 +114,10 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       <HeaderNav site={site} categories={categories} locale={locale} />
 
       <main className="flex-1">
-        {/* Article Top Leaderboard Ad */}
-        {articleTopLeaderboard && (
+        {/* Article Top Header Banner Ad */}
+        {siteAds.headerBanner && (
           <div className="container-content pt-4">
-            <AdSlotComponent slot={articleTopLeaderboard} />
+            <AdBanner slot={siteAds.headerBanner} />
           </div>
         )}
 
@@ -214,24 +214,25 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               {article.content && article.content.length > 0 ? (
                 <AdInsertionEngine
                   content={article.content}
-                  inArticleSlots={inArticleSlots}
+                  inArticleBannerSlot={siteAds.inArticleBanner}
+                  inArticleNativeSlot={siteAds.inArticleNative}
                   className="prose max-w-none"
                 />
               ) : (
                 <p className="text-gray-400">Content not available.</p>
               )}
 
-              {/* Article Bottom Leaderboard */}
-              {articleBottomLeaderboard && (
+              {/* Article Bottom Banner */}
+              {siteAds.footerBanner && (
                 <div className="mt-8">
-                  <AdSlotComponent slot={articleBottomLeaderboard} />
+                  <AdBanner slot={siteAds.footerBanner} />
                 </div>
               )}
 
               {/* Native ad at bottom */}
-              {nativeArticleBottom && (
+              {siteAds.inArticleNative && (
                 <div className="mt-6">
-                  <NativeAdCard slot={nativeArticleBottom} />
+                  <NativeAdCard slot={siteAds.inArticleNative} />
                 </div>
               )}
 
@@ -282,7 +283,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                 <SidebarWidgets
                   trendingArticles={trendingArticles}
                   featuredArticles={featuredArticles}
-                  adSlots={adSlots}
+                  sidebarSlot={siteAds.sidebarBanner}
                   locale={locale}
                 />
               </div>

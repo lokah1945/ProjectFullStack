@@ -8,7 +8,7 @@ export { TrendingStrip } from './trending-strip';
 export { LatestList } from './latest-list';
 export { ListingPage } from './listing-page';
 export { SidebarWidgets } from './sidebar-widgets';
-export { AdSlotComponent } from './ad-slot';
+export { AdBanner } from './ad-banner';
 export { NativeAdCard } from './native-ad-card';
 export { ContentRenderer } from './content-renderer';
 export { AdInsertionEngine } from './ad-insertion-engine';

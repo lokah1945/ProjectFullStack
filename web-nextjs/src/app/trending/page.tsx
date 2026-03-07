@@ -1,12 +1,13 @@
 // src/app/trending/page.tsx
-// Trending articles listing with pagination
+// Trending articles listing — sorted by view velocity (avg views/hour, 3 days)
 
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import {
-  fetchArticles,
+  fetchTrendingArticles,
   fetchFeaturedArticles,
-  fetchAdSlots,
+  fetchAdGroups,
+  pickSiteAds,
   fetchSiteBySlug,
   fetchNavCategories,
 } from '@/lib/strapi';
@@ -23,57 +24,43 @@ export async function generateMetadata(): Promise<Metadata> {
   return generateSiteMetadata(site, { page: { title: 'Trending', path: '/trending' } });
 }
 
-interface TrendingPageProps {
-  searchParams: Promise<{ page?: string }>; // R1.1
-}
-
-export default async function TrendingPage({ searchParams }: TrendingPageProps) {
-  // R1.1: await searchParams
-  const resolvedParams = await searchParams;
-  const page = Number(resolvedParams?.page ?? '1') || 1;
-
+export default async function TrendingPage() {
   // R1.1: await headers()
   const headersList = await headers();
   const siteSlug = headersList.get('x-site-slug') ?? 'glimpseit';
   const locale = headersList.get('x-locale') ?? 'en';
 
   const [
-    articlesRes,
+    trendingRes,
     featuredRes,
-    adSlots,
+    adGroups,
     site,
     categories,
   ] = await Promise.all([
-    fetchArticles(siteSlug, {
-      filters: { 'filters[isTrending][$eq]': 'true' },
-      page,
-      pageSize: 10,
-      sort: 'publishedAt:desc',
-      locale,
-      revalidate: 120,
-    }).catch(() => ({
+    fetchTrendingArticles(siteSlug, 20, locale).catch(() => ({
       data: [],
-      meta: { pagination: { page: 1, pageSize: 10, pageCount: 0, total: 0 } },
+      meta: { pagination: { page: 1, pageSize: 20, pageCount: 0, total: 0 } },
     })),
-    fetchFeaturedArticles(siteSlug, 5, locale).catch(() => ({ data: [] })),
-    fetchAdSlots().catch(() => []),
+    fetchFeaturedArticles(siteSlug, 5, locale).catch(() => ({ data: [], meta: { pagination: { page: 1, pageSize: 5, pageCount: 0, total: 0 } } })),
+    fetchAdGroups(siteSlug).catch(() => []),
     fetchSiteBySlug(siteSlug).catch(() => null),
     fetchNavCategories(siteSlug, locale).catch(() => []),
   ]);
+
+  const siteAds = pickSiteAds(adGroups);
 
   return (
     <ListingPage
       title="Trending Now"
       subtitle="What everyone is reading right now"
-      articles={articlesRes.data}
-      pagination={articlesRes.meta.pagination}
-      adSlots={adSlots}
+      articles={trendingRes.data}
+      pagination={trendingRes.meta.pagination}
+      siteAds={siteAds}
       site={site}
       categories={categories}
       locale={locale}
       basePath="/trending"
       featuredArticles={featuredRes.data}
-      listingAdSlotKey="listing_between_mrec"
     />
   );
 }

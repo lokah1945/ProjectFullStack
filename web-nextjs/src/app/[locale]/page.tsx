@@ -7,7 +7,8 @@ import {
   fetchFeaturedArticles,
   fetchTrendingArticles,
   fetchLatestArticles,
-  fetchAdSlots,
+  fetchAdGroups,
+  pickSiteAds,
   fetchSiteBySlug,
   fetchNavCategories,
 } from '@/lib/strapi';
@@ -15,7 +16,7 @@ import { generateSiteMetadata } from '@/lib/seo';
 import { FeaturedHero } from '@/components/featured-hero';
 import { TrendingStrip } from '@/components/trending-strip';
 import { LatestList } from '@/components/latest-list';
-import { AdSlotComponent } from '@/components/ad-slot';
+import { AdBanner } from '@/components/ad-banner';
 import { NativeAdCard } from '@/components/native-ad-card';
 import { HeaderNav } from '@/components/header-nav';
 import { Footer } from '@/components/footer';
@@ -57,21 +58,19 @@ export default async function LocaleHomePage({ params }: LocaleHomePageProps) {
     featuredRes,
     trendingRes,
     latestRes,
-    adSlots,
+    adGroups,
     site,
     categories,
   ] = await Promise.all([
     fetchFeaturedArticles(siteSlug, 5, locale).catch(() => ({ data: [], meta: { pagination: { page: 1, pageSize: 5, pageCount: 0, total: 0 } } })),
     fetchTrendingArticles(siteSlug, 6, locale).catch(() => ({ data: [], meta: { pagination: { page: 1, pageSize: 6, pageCount: 0, total: 0 } } })),
     fetchLatestArticles(siteSlug, 10, 1, locale).catch(() => ({ data: [], meta: { pagination: { page: 1, pageSize: 10, pageCount: 0, total: 0 } } })),
-    fetchAdSlots().catch(() => []),
+    fetchAdGroups(siteSlug).catch(() => []),
     fetchSiteBySlug(siteSlug).catch(() => null),
     fetchNavCategories(siteSlug, locale).catch(() => []),
   ]);
 
-  const heroBillboardSlot = adSlots.find(s => s.slotKey === 'home_hero_billboard');
-  const trendingLeaderboardSlot = adSlots.find(s => s.slotKey === 'home_trending_leaderboard');
-  const nativeHomeFeedSlot = adSlots.find(s => s.slotKey === 'native_home_feed');
+  const siteAds = pickSiteAds(adGroups);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -82,9 +81,9 @@ export default async function LocaleHomePage({ params }: LocaleHomePageProps) {
           <FeaturedHero articles={featuredRes.data} locale={locale} />
         )}
 
-        {heroBillboardSlot && (
+        {siteAds.headerBanner && (
           <div className="container-content py-4">
-            <AdSlotComponent slot={heroBillboardSlot} />
+            <AdBanner slot={siteAds.headerBanner} />
           </div>
         )}
 
@@ -92,9 +91,9 @@ export default async function LocaleHomePage({ params }: LocaleHomePageProps) {
           <TrendingStrip articles={trendingRes.data} locale={locale} />
         )}
 
-        {trendingLeaderboardSlot && (
+        {siteAds.betweenListBanner && (
           <div className="container-content py-4">
-            <AdSlotComponent slot={trendingLeaderboardSlot} />
+            <AdBanner slot={siteAds.betweenListBanner} />
           </div>
         )}
 
@@ -112,14 +111,8 @@ export default async function LocaleHomePage({ params }: LocaleHomePageProps) {
               />
             </div>
             <aside className="hidden lg:block space-y-6">
-              {adSlots.find(s => s.slotKey === 'article_sidebar_mrec') && (
-                <AdSlotComponent
-                  slot={adSlots.find(s => s.slotKey === 'article_sidebar_mrec')!}
-                />
-              )}
-              {nativeHomeFeedSlot && (
-                <NativeAdCard slot={nativeHomeFeedSlot} />
-              )}
+              <AdBanner slot={siteAds.sidebarBanner} />
+              <NativeAdCard slot={siteAds.inArticleNative} />
             </aside>
           </div>
         </section>

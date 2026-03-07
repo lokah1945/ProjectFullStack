@@ -3,7 +3,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { Breakpoint } from '@/lib/ad-utils';
+
+export type Breakpoint = 'mobile' | 'tablet' | 'desktop';
 
 const BREAKPOINTS = {
   mobile: 0,

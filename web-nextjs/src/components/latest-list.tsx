@@ -1,8 +1,8 @@
 // src/components/latest-list.tsx
-// Vertical article list with ad insertion every 5th item
+// Vertical article list with ad banner insertion every 5th item
 import type { Article, StrapiPagination, AdSlot } from '@/types';
 import { ArticleCard } from './article-card';
-import { AdSlotComponent } from './ad-slot';
+import { AdBanner } from './ad-banner';
 import { Pagination } from './pagination';
 
 interface LatestListProps {
@@ -10,8 +10,8 @@ interface LatestListProps {
   pagination?: StrapiPagination;
   locale?: string;
   basePath?: string;
-  /** Ad slot for listing_between placement */
-  listingBetweenSlot?: AdSlot | null;
+  /** Ad slot for between-list banner placement */
+  betweenListSlot?: AdSlot | null;
 }
 
 export function LatestList({
@@ -19,7 +19,7 @@ export function LatestList({
   pagination,
   locale = 'en',
   basePath = '/latest',
-  listingBetweenSlot,
+  betweenListSlot = null,
 }: LatestListProps) {
   const prefix = locale !== 'en' ? `/${locale}` : '';
 
@@ -36,12 +36,14 @@ export function LatestList({
     );
   }
 
-  // Interleave ad slots every 5 items
+  const showBetweenAds = betweenListSlot !== null;
+
+  // Interleave ad banners every 5 items
   const listItems: Array<{ type: 'article'; article: Article } | { type: 'ad' }> = [];
   articles.forEach((article, idx) => {
     listItems.push({ type: 'article', article });
     // Insert ad after every 5th article (index 4, 9, 14, ...)
-    if ((idx + 1) % 5 === 0 && listingBetweenSlot?.adUnit?.isActive) {
+    if (showBetweenAds && (idx + 1) % 5 === 0) {
       listItems.push({ type: 'ad' });
     }
   });
@@ -50,14 +52,14 @@ export function LatestList({
     <section aria-label="Article list">
       <div className="divide-y divide-gray-50">
         {listItems.map((item, idx) => {
-          if (item.type === 'ad' && listingBetweenSlot) {
+          if (item.type === 'ad') {
             return (
               <div
                 key={`ad-${idx}`}
                 className="py-5 flex justify-center"
                 aria-label="Advertisement"
               >
-                <AdSlotComponent slot={listingBetweenSlot} />
+                <AdBanner slot={betweenListSlot} className="w-full" />
               </div>
             );
           }
