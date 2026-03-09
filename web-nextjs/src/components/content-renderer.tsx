@@ -108,19 +108,14 @@ export function ContentRenderer({ content, className = '' }: ContentRendererProp
           ),
 
           // ── Links ───────────────────────────────────────────────
-          link: ({ children, url }) => {
-            const isExternal = url.startsWith('http') || url.startsWith('//');
-            return (
-              <Link
-                href={url}
-                className="text-[var(--color-primary)] underline underline-offset-2 hover:text-[var(--color-primary-dark)] transition-colors duration-150 decoration-[var(--color-primary-light)]"
-                target={isExternal ? '_blank' : undefined}
-                rel={isExternal ? 'noopener noreferrer' : undefined}
-              >
-                {children}
-              </Link>
-            );
-          },
+          link: ({ children, url }) => (
+            <Link
+              href={url}
+              className="text-[var(--color-primary)] underline underline-offset-2 hover:text-[var(--color-primary-dark)] transition-colors duration-150 decoration-[var(--color-primary-light)]"
+            >
+              {children}
+            </Link>
+          ),
 
           // ── Lists ───────────────────────────────────────────────
           list: ({ children, format }) => {
